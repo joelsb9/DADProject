@@ -21,7 +21,7 @@ const responseData = ref('')
 const submit = async () => {
     try {
         // Correct the endpoint and provide the full URL
-        const responseLogin = await axios.post('http://127.0.0.1:8000/api/auth/login', {
+        const responseLogin = await axios.post('http://laravel.test/api/auth/login', {
             username: username.value,
             password: password.value
         }, {
@@ -36,7 +36,7 @@ const submit = async () => {
         axios.defaults.headers.common.Authorization = "Bearer " + responseLogin.data.access_token;
 
         // Correct the endpoint for the second request
-        const responseRequest = await axios.get('http://127.0.0.1:8000/api/categories');
+        const responseRequest = await axios.get('http://laravel.test/api/categories');
 
         // Update responseData with the appropriate data from the response
         responseData.value = responseRequest.data.data[0].name;
@@ -45,6 +45,7 @@ const submit = async () => {
         console.error('Error:', error);
     }
 }
+
 </script>
 
 <template>
