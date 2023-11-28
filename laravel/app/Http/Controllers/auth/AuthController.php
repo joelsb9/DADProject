@@ -12,8 +12,8 @@ class AuthController extends Controller
     {
         $passportData = [
             'grant_type' => 'password',
-            'client_id' => env('PASSPORT_PASSWORD_GRANT_ID'),
-            'client_secret' => env('PASSPORT_PASSWORD_GRANT_SECRET'),
+            'client_id' => env('PASSPORT_CLIENT_ID'),
+            'client_secret' => env('PASSPORT_CLIENT_SECRET'),
             'username' => $request->username,
             'password' => $request->password,
             'scope'         => '',
@@ -21,7 +21,7 @@ class AuthController extends Controller
 
         request()->request->add($passportData);
 
-        $request = Request::create(env('PASSPORT_URL') . '/oauth/token', 'POST');
+        $request = Request::create(env('PASSPORT_SERVER_URL') . '/oauth/token', 'POST');
         $response = Route::dispatch($request);
         $errorCode = $response->getStatusCode();
 

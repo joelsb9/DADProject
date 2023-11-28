@@ -1,12 +1,22 @@
 <script setup>
 import { ref, inject } from 'vue'
-
+const axios = inject('axios')
 const socket = inject('socket')
+socket.on('connect', () => {
+    console.log("Connected to socket server")
+})
+socket.on('disconnect', () => {
+    console.log("Disconnected from socket server")
+})
+socket.on('error', (error) => {
+    console.log("Socket error: " + error)
+})
 
 const message = ref('DAD Intermediate Submission')
 const responseData = ref('')
 
 const send = () => {
+    console.log("Sending message: " + message.value)
     socket.emit('echo', message.value)
 }
 

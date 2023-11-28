@@ -9,6 +9,7 @@ import App from './App.vue'
 const app = createApp(App)
 
 const apiDomain = import.meta.env.VITE_API_DOMAIN
+console.log(apiDomain)
 const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
 app.provide('socket', io(wsConnection))
@@ -22,6 +23,7 @@ app.provide(
     }
   })
 )
+
 app.provide('serverBaseUrl', apiDomain)
 
 app.mount('#app')
