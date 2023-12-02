@@ -1,0 +1,11 @@
+Link Vue (dentro da diretoria vue no terminal local em ubuntu) : rsync -av -e "ssh -i ~/.ssh/id_rsa" dist/ dad@172.22.21.115:/var/www/project/vue/
+
+Link Laravel (dentro da diretoria DADProject no terminal local em ubuntu) : rsync -avz -e "ssh -i ~/.ssh/id_rsa" --exclude '.env' --exclude 'node_modules/' --exclude "vendor" \
+--exclude "public/storage" --exclude "storage/app" --exclude "composer.lock" \
+laravel dad@172.22.21.115:/var/www/project/
+
+Link Websocket (dentro da diretoria DADProject no terminal local em ubuntu) : rsync -av -e "ssh -i ~/.ssh/id_rsa" websockets dad@172.22.21.115:/var/www/project/
+
+Aceder à BD na VM: 
+1.mysql -u root -p
+2.PASS: DAD@MySQL2023
