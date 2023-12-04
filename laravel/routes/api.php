@@ -1,6 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\auth\AuthController;
+=======
+use App\Http\Controllers\api\AuthController;
+>>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\VcardController;
 use Illuminate\Http\Request;
@@ -53,3 +57,9 @@ Route::prefix('transactions')->group(function () {
 });
 
 
+<<<<<<< HEAD
+=======
+
+//    }
+//);
+>>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
