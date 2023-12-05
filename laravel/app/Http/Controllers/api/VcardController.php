@@ -11,7 +11,7 @@ use App\Http\Resources\VcardResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardRequest;
-use App\Http\Requests\UpdateUserVcardPasswordRequest;
+use App\Http\Requests\UpdateAdminVcardPasswordRequest;
 
 class VcardController extends Controller
 {
@@ -84,7 +84,7 @@ class VcardController extends Controller
 
         return new VCardResource($vcard);
     }
-    public function update_password(UpdateUserVcardPasswordRequest $request, Vcard $vcard)
+    public function update_password(UpdateAdminVcardPasswordRequest $request, Vcard $vcard)
     {
         // Check if the current user is authenticated
         // if (!Auth::check() || !Auth::user()->is($vcard)) {

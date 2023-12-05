@@ -31,7 +31,7 @@ class Transaction extends Model
 
     protected $casts = [
         //'date' => 'date',
-        'date_time' => 'datetime'
+        'datetime' => 'datetime'
     ];
 
     //if we need to set default values for date and datetime

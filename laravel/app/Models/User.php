@@ -11,12 +11,13 @@ use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    protected $table = 'view_auth_users';
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
-    protected $dates = ['email_verified_at','created_at','updated_at'];
+    protected $dates = ['email_verified_at'];
 
 
     protected $hidden = [
@@ -29,4 +30,8 @@ class User extends Authenticatable
         'custom_data' => 'json'
     ];
 
+    public function findForPassport(string $username): User
+    {
+        return $this->where('username', $username)->first();
+    }
 }

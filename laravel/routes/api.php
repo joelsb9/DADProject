@@ -1,15 +1,10 @@
 <?php
 
-<<<<<<< HEAD
-use App\Http\Controllers\auth\AuthController;
-=======
-use App\Http\Controllers\api\AuthController;
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\VcardController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\TransactionController;
 
 //Auth::routes();
@@ -38,13 +33,13 @@ Route::prefix('vcards')->group(function () {
     Route::get('{vcard}/transactions', [TransactionController::class, 'getTransactionsForVcard']);
 });
 
-Route::prefix('users')->group(function () {
-    Route::get('/', [UserController::class, 'index']);
-    Route::get('/{user}', [UserController::class, 'show']);
-    Route::post('/', [UserController::class, 'store']);
-    Route::put('/{user}', [UserController::class, 'update']);
-    Route::put('/update-password/{user}', [UserController::class, 'update_password']);
-    Route::get('/me', [UserController::class, 'show_me'])->middleware('auth:api');
+Route::prefix('admins')->group(function () {
+    Route::get('/', [AdminController::class, 'index']);
+    Route::get('/{admin}', [AdminController::class, 'show']);
+    Route::post('/', [AdminController::class, 'store']);
+    Route::put('/{admin}', [AdminController::class, 'update']);
+    Route::put('/update-password/{admin}', [AdminController::class, 'update_password']);
+    Route::get('/me', [AdminController::class, 'show_me'])->middleware('auth:api');
 });
 
 Route::prefix('transactions')->group(function () {
@@ -56,10 +51,5 @@ Route::prefix('transactions')->group(function () {
     Route::put('/restore/{transactionId}', [TransactionController::class, 'restore']);
 });
 
-
-<<<<<<< HEAD
-=======
-
 //    }
 //);
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,12 +10,6 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Determine the user provider based on the username format
-        $userProvider = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'users' : 'vcards';
-
-        // Set up the appropriate user provider dynamically
-        config(['auth.defaults.provider' => $userProvider]);
-
         $passportData = [
             'grant_type' => 'password',
             'client_id' => env('PASSPORT_CLIENT_ID'),

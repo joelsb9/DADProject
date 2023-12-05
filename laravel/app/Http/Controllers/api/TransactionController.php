@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\api;
 
+use Carbon\Carbon;
 use App\Models\Vcard;
 use App\Models\Transaction;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\StoreTransactionRequest;
-Use App\Http\Requests\UpdateTransactionRequest;
-use Carbon\Carbon;
+use App\Http\Requests\UpdateTransactionRequest;
 
 class TransactionController extends Controller
 {
@@ -26,12 +27,20 @@ class TransactionController extends Controller
     {
         $dataToSave = $request->validated();
 
+        // Get the authenticated user
+        $authenticatedUser = Auth::user();
+
+        // Check if the authenticated user owns the vCard
+        if ($authenticatedUser->username !== $dataToSave['vcard']) {
+            return response()->json(['message' => 'Unauthorized. You do not own this vCard.'], 403);
+        }
+
         $transaction = new Transaction();
         $transaction->fill($dataToSave);
 
         $transaction_new = new Transaction();
         //Se for uma transação de vCard cria uma nova transação no cartao destino
-        if($dataToSave['payment_type'] === 'VCARD') {
+        if ($dataToSave['payment_type'] === 'VCARD') {
             //Define time at the same time as the original transaction
             $transaction_new->date = Carbon::now()->toDateString();
             $transaction_new->datetime = Carbon::now();
@@ -50,15 +59,14 @@ class TransactionController extends Controller
             $transaction_new->payment_reference = $dataToSave['vcard'];
             $transaction_new->pair_vcard = $dataToSave['vcard'];
             $transaction_new->pair_transaction = $transaction->id;
-            if(isset($dataToSave['category_id'])){
+            if (isset($dataToSave['category_id'])) {
                 $transaction_new->category_id = $dataToSave['category_id'];
             }
 
             $transaction_new->save();
             $transaction->pair_transaction = $transaction_new->id;
             $transaction->pair_vcard = $dataToSave['payment_reference'];
-        }
-        else{
+        } else {
             $transaction->date = Carbon::now()->toDateString();
             $transaction->datetime = Carbon::now();
         }

@@ -10,31 +10,18 @@
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.10",
         "laravel/sanctum": "^3.2",
-<<<<<<< HEAD
-<<<<<<< HEAD
-        "laravel/tinker": "^2.8"
-=======
+        "laravel/telescope": "^4.17",
+        "laravel/tinker": "^2.8",
+        "laravel/ui": "^4.2",
         "laravel/telescope": "^4.17",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2"
->>>>>>> 0ea4eb2 (API-CRUD for Transactions,Vcards,Users / All models Done, 3 Controllers(Transactions,Vcards,Users) / Routes for (Transactions,Vcards,Users) / Requests for (Transactions,Vcards,Users) / Resources for (Transactions,Vcards,Users) / tested all besides Transactions(Update,Delete,Restore,getTransactionsForVcards))
-=======
-        "laravel/telescope": "^4.17",
-        "laravel/tinker": "^2.8",
-        "laravel/ui": "^4.2"
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
-<<<<<<< HEAD
-<<<<<<< HEAD
         "laravel/telescope": "^4.17",
-=======
->>>>>>> 0ea4eb2 (API-CRUD for Transactions,Vcards,Users / All models Done, 3 Controllers(Transactions,Vcards,Users) / Routes for (Transactions,Vcards,Users) / Requests for (Transactions,Vcards,Users) / Resources for (Transactions,Vcards,Users) / tested all besides Transactions(Update,Delete,Restore,getTransactionsForVcards))
-=======
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.1",

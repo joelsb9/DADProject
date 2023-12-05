@@ -70,17 +70,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-<<<<<<< HEAD
-        'vcards' => [
-            'driver' => 'eloquent',
-            'table' => App\Models\Vcard::class,
-        ],
-=======
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
+        // 'vcards' => [
+        //     'driver' => 'eloquent',
+        //     'table' => App\Models\Vcard::class,
         // ],
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
     ],
 
     /*

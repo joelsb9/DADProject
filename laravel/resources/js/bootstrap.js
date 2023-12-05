@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import 'bootstrap';
-
->>>>>>> 0ea4eb2 (API-CRUD for Transactions,Vcards,Users / All models Done, 3 Controllers(Transactions,Vcards,Users) / Routes for (Transactions,Vcards,Users) / Requests for (Transactions,Vcards,Users) / Resources for (Transactions,Vcards,Users) / tested all besides Transactions(Update,Delete,Restore,getTransactionsForVcards))
-=======
-import 'bootstrap';
-
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -34,15 +25,6 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     broadcaster: 'pusher',
 //     key: import.meta.env.VITE_PUSHER_APP_KEY,
 //     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-<<<<<<< HEAD
-<<<<<<< HEAD
-//     wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
-=======
-//     wsHost: import.meta.env.VITE_PUSHER_HOST ?? `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
->>>>>>> 0ea4eb2 (API-CRUD for Transactions,Vcards,Users / All models Done, 3 Controllers(Transactions,Vcards,Users) / Routes for (Transactions,Vcards,Users) / Requests for (Transactions,Vcards,Users) / Resources for (Transactions,Vcards,Users) / tested all besides Transactions(Update,Delete,Restore,getTransactionsForVcards))
-=======
-//     wsHost: import.meta.env.VITE_PUSHER_HOST ?? `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
->>>>>>> 0ea4eb24327d4e3b552da19c853489caa039c552
 //     wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
 //     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
