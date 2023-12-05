@@ -15,7 +15,7 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        return TransactionResource::collection(Transaction::withTrashed()->get());
+        return TransactionResource::collection(Transaction::withTrashed()->get())->paginate(10);
     }
 
     public function show(Transaction $transaction)
@@ -33,6 +33,13 @@ class TransactionController extends Controller
         // Check if the authenticated user owns the vCard
         if ($authenticatedUser->username !== $dataToSave['vcard']) {
             return response()->json(['message' => 'Unauthorized. You do not own this vCard.'], 403);
+        }
+        //finds a vcards with the phone number
+        $vcard = Vcard::where('phone_number', $dataToSave['vcard'])->first();
+
+        // Check if the vCard is blocked
+        if ($vcard->blocked) {
+            return response()->json(['message' => 'Blocked vCard cannot perform transactions'], 403);
         }
 
         $transaction = new Transaction();

@@ -146,7 +146,9 @@ class StoreTransactionRequest extends FormRequest
                     }
                 },
             ],
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json'
         ];
     }
 }

@@ -27,11 +27,13 @@ class Transaction extends Model
         'category_id',
         'description'
     ];
-    protected $dates = ['date','datetime','created_at', 'updated_at','deleted_at'];
+    protected $dates = ['date','datetime'];
 
     protected $casts = [
         //'date' => 'date',
-        'datetime' => 'datetime'
+        'datetime' => 'datetime',
+        'custom_options' => 'json',
+        'custom_data' => 'json'
     ];
 
     //if we need to set default values for date and datetime

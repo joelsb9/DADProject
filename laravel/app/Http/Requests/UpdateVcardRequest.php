@@ -30,8 +30,8 @@ class UpdateVcardRequest extends FormRequest
             'blocked' => 'sometimes|boolean',
             'balance' => 'sometimes|numeric|min:0',
             'max_debit' => 'sometimes|numeric|min:0',
-            'custom_options' => 'sometimes|json',
-            'custom_data' => 'sometimes|json',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json'
         ];
     }
 }

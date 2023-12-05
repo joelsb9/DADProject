@@ -18,7 +18,6 @@ class Admin extends Model
     ];
     protected $dates = ['email_verified_at'];
 
-
     protected $hidden = [
         'password',
         'remember_token',
@@ -28,5 +27,4 @@ class Admin extends Model
         'custom_options' => 'json',
         'custom_data' => 'json'
     ];
-
 }

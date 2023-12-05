@@ -18,7 +18,6 @@ class Category extends Model
         'custom_data',
     ];
 
-    protected $dates = ['deleted_at'];
     public function getTypeNameAttribute()
     {
         switch ($this->type) {
@@ -30,6 +29,10 @@ class Category extends Model
                 return 'Unknown';
         }
     }
+    protected $casts = [
+        'custom_options' => 'json',
+        'custom_data' => 'json'
+    ];
     public function vcard()
     {
         return $this->belongsTo(Vcard::class, 'vcard', 'phone_number');

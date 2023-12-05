@@ -127,7 +127,9 @@ class UpdateTransactionRequest extends FormRequest
                     }
                 },
             ],
-            'description' => 'sometimes|string'
+            'description' => 'sometimes|string',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json'
         ];
     }
 }

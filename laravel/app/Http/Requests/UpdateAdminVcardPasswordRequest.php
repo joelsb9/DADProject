@@ -25,6 +25,8 @@ class UpdateAdminVcardPasswordRequest extends FormRequest
             'current_password' => 'required|string',
             'new_password' => 'required|string|min:3|different:current_password',
             'confirm_password' => 'required|string|same:new_password',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json'
         ];
     }
 }

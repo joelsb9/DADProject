@@ -23,7 +23,7 @@ app.provide(
     }
   })
 )
-
+//console.log(apiDomain+'/api')
 app.provide('serverBaseUrl', apiDomain)
 
 app.mount('#app')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin; // Import the Admin model
@@ -9,8 +9,6 @@ use App\Http\Requests\UpdateAdminVcardPasswordRequest; // Update password reques
 use Illuminate\Http\Request;
 use App\Http\Resources\AdminResource; // Resource for Admin
 use App\Http\Requests\StoreAdminRequest; // Store request for Admin
-use Illuminate\Support\Facades\Storage;
-use App\Services\Base64Services;
 
 class AdminController extends Controller
 {

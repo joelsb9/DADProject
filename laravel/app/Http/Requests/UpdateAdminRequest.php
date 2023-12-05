@@ -24,6 +24,8 @@ class UpdateAdminRequest extends FormRequest
         return [
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users|max:255',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json',
         ];
     }
 }

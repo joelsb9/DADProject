@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Http\Resources;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AdminResource extends JsonResource
 {
-    public static $format = 'default';
-
+    public function boot()
+    {
+        AdminResource::withoutWrapping();
+    }
     /**
      * Transform the resource into an array.
      *
@@ -15,21 +18,13 @@ class AdminResource extends JsonResource
      */
     public function toArray($request)
     {
-        switch(AdminResource::$format){
-            case 'withTrasactions':
-                return [
-                    'id' => $this->id,
-                    'name' => $this->name,
-                    'email' => $this->email,
-
-                ];
-            default:
-            return [
-                'id' => $this->id,
-                'name' => $this->name,
-                'email' => $this->email,
-            ];
-        }
-
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'custom_options' => json_decode($this->custom_options),
+            'custom_data' => json_decode($this->custom_data),
+            'email_verified_at' => $this->email_verified_at,
+        ];
     }
 }

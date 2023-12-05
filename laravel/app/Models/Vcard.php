@@ -21,13 +21,13 @@ class Vcard extends Model
         'max_debit'
     ];
 
-    protected $data=['created_at','updated_at','deleted_at'];
     protected $casts=[
         'custom_options' => 'json',
-        'custom_data' => 'json'
+        'custom_data' => 'json',
+        'blocked' => 'boolean'
     ];
     protected $attributes = [
-        'blocked' => 0, // Set the default value for 'blocked' to 0
+        'blocked' => false, // Set the default value for 'blocked' to 0
         'balance' => 0, // Set the default value for 'balance' to 0
         'max_debit' => 5000 // Set the default value for 'max_debit' to 0
     ];

@@ -29,4 +29,8 @@ class DefaultCategory extends Model
                 return 'Unknown';
         }
     }
+    protected $casts = [
+        'custom_options' => 'json',
+        'custom_data' => 'json'
+    ];
 }

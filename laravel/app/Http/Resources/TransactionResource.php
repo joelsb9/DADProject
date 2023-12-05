@@ -32,8 +32,8 @@ class TransactionResource extends JsonResource
                     "category_id" => $this->category_id,
                     //"category_name" => $this->category->name,
                     "desciption" => $this->description,
-                    //"custom_options" => $this->custom_options,
-                    //"custom_data" => $this->custom_data
+                    'custom_options' => json_decode($this->custom_options),
+                    'custom_data' => json_decode($this->custom_data),
                     //"transactions" => TransactionResource::collection($this->tasks->sortByDesc('id'))
                 ];
             default:
@@ -52,8 +52,8 @@ class TransactionResource extends JsonResource
                     // "pair_vcard_phone_number" => $this->pair_vcard,
                     // "category_id" => $this->category_id,
                     // "desciption" => $this->description,
-                    //"custom_options" => $this->custom_options,
-                    //"custom_data" => $this->custom_data,
+                    'custom_options' => json_decode($this->custom_options),
+                    'custom_data' => json_decode($this->custom_data),
                 ];
         }
     }

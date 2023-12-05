@@ -11,7 +11,7 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => 'in:C,D',
+            'name' => 'string|max:255',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json',
         ];
     }
 }

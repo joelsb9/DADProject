@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Models\Vcard;
 use Illuminate\Http\Request;
+use App\Models\DefaultCategory;
 use App\Services\Base64Services;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -53,10 +54,33 @@ class VcardController extends Controller
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
 
-        $vcard->save();
+        if ($vcard->save()) {
+            //$vcard->sendEmailVerificationNotification();
 
+            // Fetch default categories
+            $defaultCategories = DefaultCategory::all();
+
+            // Create categories for the new vCard based on default categories
+            foreach ($defaultCategories as $defaultCategory) {
+                $vcard->categories()->create([
+                    'type' => $defaultCategory->type,
+                    'name' => $defaultCategory->name,
+                    'custom_options' => $defaultCategory->custom_options,
+                    'custom_data' => $defaultCategory->custom_data,
+                ]);
+            }
+        }
         return new VcardResource($vcard);
     }
+    // public function update_categories(Request $request, Vcard $vcard)
+    // {
+    //     $dataToSave = $request->validated();
+
+    //     //update an existing categorie
+    //     $vcard->categories()->update($dataToSave);
+
+    //     return new VcardResource($vcard);
+    // }
 
     public function update(UpdateVcardRequest $request, Vcard $vcard)
     {
@@ -99,13 +123,16 @@ class VcardController extends Controller
     }
     public function show_me(Request $request)
     {
+        $authenticatedUser = Auth::user();
         $vcard = $request->user('vcard');
-        if ($vcard) {
-            return new VcardResource($vcard);
-        } else {
-            return response()->json(['message' => 'VCard not found'], 404);
+
+        if (!$vcard || $authenticatedUser->phone_number !== $vcard->phone_number) {
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
+
+        return new VcardResource($vcard);
     }
+
 
     public function delete(Vcard $vcard)
     {
