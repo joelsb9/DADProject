@@ -15,7 +15,7 @@ class CategoryController extends Controller
         // Retrieve all default categories
         $categories = Category::all();
 
-        return CategoryResource::collection($categories);
+        return CategoryResource::collection($categories)->paginate(10);
     }
 
     public function show(Category $category)

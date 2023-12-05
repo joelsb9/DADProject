@@ -26,10 +26,10 @@ const submit = async () => {
         axios.defaults.headers.common.Authorization = "Bearer " + responseLogin.data.access_token;
 
         // Correct the endpoint for the second request
-        const responseRequest = await axios.get('/categories');
+        const responseRequest = await axios.get('/vcards');
         console.log(responseRequest.data);
         // Update responseData with the appropriate data from the response
-        responseData.value = responseRequest.data[0].name;
+        responseData.value = responseRequest.data.data[0].name;
     } catch (error) {
         // Handle errors (you might want to log or display an error message)
         console.error('Error:', error);
