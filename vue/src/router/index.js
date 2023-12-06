@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useVcardStore } from '../components/stores/vcard.js'
 import HomeView from '../views/HomeView.vue'
 import Dashboard from "../components/Dashboard.vue"
-//import Login from "../components/auth/Login.vue"
 import RegisterVcard from "../components/auth/RegisterVcard.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 // import Categories from "../components/categories/Categories.vue";
@@ -19,7 +18,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/about',
@@ -32,7 +31,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: RegisterVcard
+      component: () => import('../components/auth/Login.vue')
     },
     {
       path: '/register-vcard',

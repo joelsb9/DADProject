@@ -42,79 +42,37 @@ onMounted(async () => {
   console.log('isLoggedIn.value: ', isLoggedIn.value)
 })
 
-const registerVcard = () => {
-  router.push({ name: 'RegisterVcard' })
+if (!isLoggedIn.value) {
+  router.push({ name: 'Login' }); // Substitua 'Login' pelo nome da sua rota de login
 }
 </script>
 
 
-<template >
-  <!-- v-if="!isLoggedIn" -->
-  <!-- Login and listening to the emit (registerVcard)-->
-  <Login @registerVcard="registerVcard" />  
-  <div v-if="isLoggedIn">
-    <main>
-      
-      <aside>
-        <!-- if isLoggedIn.value == flase show the login page-->
-        <!-- <router-view />
-        <router-link :to="{ name: 'Login' }">Login</router-link>
-        
-        <router-link :to="{ name: 'ChangePassword' }">Forgot password?</router-link> -->
-        <!-- <router-link to="/dashboard">Dashboard</router-link>
-        <router-link to="/transactions">Transactions</router-link>
-        <router-link to="/profile">Profile</router-link>
-        <router-link to="/settings">Settings</router-link> -->
-      </aside>
-
-      <!-- Display dynamic content based on the current route -->
-    </main>
-
-    <!-- Footer -->
+<template>
+  <div id="app" v-if="!isLoggedIn">
+    <router-view />
     <footer>
-      <p>&copy; 2023 vCard Platform</p>
+      <p>&copy; 2023 vCard Platform by Pedro Alfaiate, Tiago Cabecinhas, Amelia Górska & Joel Bastos</p>
     </footer>
   </div>
 </template>
 
-
 <style>
-/* Add your global styles here */
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-}
-
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-header {
+footer {
+  margin-top: auto; /* Push the footer to the bottom */
+  text-align: center;
+  padding: 10px;
   background-color: #333;
   color: white;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
-header h1 {
-  margin: 0;
-}
-
-main {
-  flex: 1;
-  display: flex;
-}
-
-aside {
-  width: 200px;
-  background-color: #f0f0f0;
-  padding: 20px;
-}
-
+/* Add your global styles here */
 router-link {
   display: block;
   margin-bottom: 10px;
@@ -126,12 +84,4 @@ router-link {
 router-link:hover {
   color: #555;
 }
-
-footer {
-  text-align: center;
-  padding: 10px;
-  background-color: #333;
-  color: white;
-}
 </style>
- 

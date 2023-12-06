@@ -52,7 +52,8 @@ const goToRegister = () => {
             </form>
             <div>
                 <!--Create an hipper link to emit a function-->
-                <a href="#" class="register-link" @click="goToRegister">Register</a>
+                <RouterLink :to="{name:'RegisterVcard'}" :class="{ active: $route.name === 'RegisterVcard'}"><i> Register </i></RouterLink>
+                <router-view/>
             </div>
         </div>
     </div>

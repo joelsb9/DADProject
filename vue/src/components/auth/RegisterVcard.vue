@@ -101,7 +101,7 @@
   
   
 <style scoped>
-.login-container {
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -110,7 +110,7 @@
     /* Blue Ocean color */
 }
 
-.login-box {
+.register-box {
     display: flex;
     flex-direction: column;
     align-items: center;
