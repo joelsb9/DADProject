@@ -11,30 +11,32 @@ use App\Http\Controllers\Api\DefaultCategoryController;
 //Auth::routes();
 
 Route::post('auth/login', [AuthController::class, 'login']);
-Route::middleware('auth:api')->post(
-    'logout',
-    [AuthController::class, 'auth/logout']
-);
 
-Route::middleware('auth:api')->group(
-    function () {
-        Route::apiResource('categories', CategoryController::class);
-        Route::post('categories/{categoryId}/restore', [CategoryController::class, 'restore']);
-        Route::apiResource('vcards', VcardController::class);
-        Route::put('vcards/restore/{vcardId}', [VcardController::class, 'restore']);
-        Route::get('vcards/me', [VcardController::class, 'show_me']);
-        Route::put('vcards/update-password/{vcard}', [VcardController::class, 'update_password']);
+
+Route::middleware('auth:api')->group(function () {
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getTransactionsForVcard']);
+        Route::get('vcards/me', [VcardController::class, 'show_me']);
+        Route::put('vcards/restore/{vcardId}', [VcardController::class, 'restore']);
+        Route::put('vcards/{vcard}/password', [VcardController::class, 'update_password']);
+        Route::apiResource('vcards', VcardController::class);
 
-        Route::apiResource('admins', AdminController::class);
+
+        Route::post('logout',  [AuthController::class, 'logout']);
+
         Route::get('admins/me', [AdminController::class, 'show_me'])->middleware('auth:api');
-        Route::put('admins/update-password/{admin}', [AdminController::class, 'update_password']);
+        Route::put('admins/{admin}/password', [AdminController::class, 'update_password']);
+        Route::put('admins/{admin}/password', [AdminController::class, 'update_password']);
+        Route::apiResource('admins', AdminController::class)->except(['destroy']);
 
-        Route::apiResource('transactions', TransactionController::class);
         Route::put('transactions/restore/{transactionId}', [TransactionController::class, 'restore']);
+        Route::apiResource('transactions', TransactionController::class);
 
-        Route::apiResource('default-categories', DefaultCategoryController::class);
         Route::post('default-categories/{defaultCategoryId}/restore', [DefaultCategoryController::class, 'restore']);
+        Route::apiResource('default-categories', DefaultCategoryController::class);
+
+        Route::post('categories/{categoryId}/restore', [CategoryController::class, 'restore']);
+        Route::apiResource('categories', CategoryController::class);
+
     }
 );
 

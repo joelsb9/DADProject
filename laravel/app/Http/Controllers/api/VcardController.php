@@ -14,29 +14,24 @@ use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardRequest;
 use App\Http\Requests\UpdateAdminVcardPasswordRequest;
 
-class VcardController extends Controller
-{
-    private function storeBase64AsFile(VCard $vcard, string $base64String)
-    {
+class VcardController extends Controller {
+    private function storeBase64AsFile(VCard $vcard, string $base64String) {
         $targetDir = storage_path('app/public/vcard_photos');
-        $newfilename = $vcard->id . "_" . rand(10000, 19999);
+        $newfilename = $vcard->id."_".rand(10000, 19999);
         $base64Service = new Base64Services();
         return $base64Service->saveFile($base64String, $targetDir, $newfilename);
     }
 
-    public function index()
-    {
+    public function index() {
         return VcardResource::collection(Vcard::withTrashed()->paginate(10));
     }
 
 
-    public function show(Vcard $vcard)
-    {
+    public function show(Vcard $vcard) {
         return new VcardResource($vcard);
     }
 
-    public function store(StoreVcardRequest $request)
-    {
+    public function store(StoreVcardRequest $request) {
         $dataToSave = $request->validated();
 
         $vcard = new Vcard();
@@ -51,18 +46,18 @@ class VcardController extends Controller
             $dataToSave["base64ImagePhoto"] : ($dataToSave["base64ImagePhoto"] ?? null);
         unset($dataToSave["base64ImagePhoto"]);
 
-        if ($base64ImagePhoto) {
+        if($base64ImagePhoto) {
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
 
-        if ($vcard->save()) {
+        if($vcard->save()) {
             //$vcard->sendEmailVerificationNotification();
 
             // Fetch default categories
             $defaultCategories = DefaultCategory::all();
 
             // Create categories for the new vCard based on default categories
-            foreach ($defaultCategories as $defaultCategory) {
+            foreach($defaultCategories as $defaultCategory) {
                 $vcard->categories()->create([
                     'type' => $defaultCategory->type,
                     'name' => $defaultCategory->name,
@@ -83,8 +78,7 @@ class VcardController extends Controller
     //     return new VcardResource($vcard);
     // }
 
-    public function update(UpdateVcardRequest $request, Vcard $vcard)
-    {
+    public function update(UpdateVcardRequest $request, Vcard $vcard) {
         $dataToSave = $request->validated();
 
         $vcard->fill($dataToSave);
@@ -93,15 +87,15 @@ class VcardController extends Controller
         // Delete previous photo file if a new file is uploaded
         $base64ImagePhoto = array_key_exists("base64ImagePhoto", $dataToSave) ?
             $dataToSave["base64ImagePhoto"] : null;
-        if ($vcard->photo_url && $base64ImagePhoto) {
-            if (Storage::exists('public/vcard_photos/' . $vcard->photo_url)) {
-                Storage::delete('public/vcard_photos/' . $vcard->photo_url);
+        if($vcard->photo_url && $base64ImagePhoto) {
+            if(Storage::exists('public/vcard_photos/'.$vcard->photo_url)) {
+                Storage::delete('public/vcard_photos/'.$vcard->photo_url);
             }
             $vcard->photo_url = null;
         }
 
         // Create a new photo file from base64 content
-        if ($base64ImagePhoto) {
+        if($base64ImagePhoto) {
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
 
@@ -109,8 +103,7 @@ class VcardController extends Controller
 
         return new VCardResource($vcard);
     }
-    public function update_password(UpdateAdminVcardPasswordRequest $request, Vcard $vcard)
-    {
+    public function update_password(UpdateAdminVcardPasswordRequest $request, Vcard $vcard) {
         // Check if the current user is authenticated
         // if (!Auth::check() || !Auth::user()->is($vcard)) {
         //     return response()->json(['message' => 'Unauthorized'], 401);
@@ -122,25 +115,31 @@ class VcardController extends Controller
 
         return new VcardResource($vcard);
     }
-    public function show_me(Request $request)
-    {
-        $authenticatedUser = Auth::user();
-        $vcard = $request->user('vcard');
+    public function show_me(Request $request) {
+        $user = $request->user();
+        // Check if the user is authenticated
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        // Retrieve the Vcard based on the authenticated user's phone_number
+        $vcard = Vcard::where('phone_number', $user->username)->first();
 
-        if (!$vcard || $authenticatedUser->phone_number !== $vcard->phone_number) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        // Check if the Vcard is found and authorized
+        if (!$vcard) {
+            return response()->json(['message' => 'VCard not found'], 404);
         }
 
+        // Return Vcard information using a resource class (assuming you have a VcardResource class)
         return new VcardResource($vcard);
     }
 
 
-    public function delete(Vcard $vcard)
-    {
+
+    public function delete(Vcard $vcard) {
         // Delete the photo file
-        if ($vcard->photo_url) {
-            if (Storage::exists('public/vcard_photos/' . $vcard->photo_url)) {
-                Storage::delete('public/vcard_photos/' . $vcard->photo_url);
+        if($vcard->photo_url) {
+            if(Storage::exists('public/vcard_photos/'.$vcard->photo_url)) {
+                Storage::delete('public/vcard_photos/'.$vcard->photo_url);
             }
         }
 
@@ -150,8 +149,7 @@ class VcardController extends Controller
         return response()->json(['message' => 'VCard deleted successfully']);
     }
 
-    public function restore($vcardId)
-    {
+    public function restore($vcardId) {
         // Restore a soft-deleted vCard
         $vcard = Vcard::withTrashed()->find($vcardId);
         $vcard->restore();

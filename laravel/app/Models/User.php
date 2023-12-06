@@ -13,9 +13,9 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     protected $table = 'view_auth_users';
     protected $fillable = [
+        'username',
+        'user_type',
         'name',
-        'email',
-        'password',
     ];
     protected $dates = ['email_verified_at'];
 
