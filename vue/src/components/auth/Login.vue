@@ -18,6 +18,7 @@ const credentials = ref({
 
 const login = async () => {
     if (await userStore.login(credentials.value)) {
+
         toast.success('Vcard ' + userStore.userName + ' logged in');
 
         router.push('/');
