@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { useUserStore } from '../stores/user.js';
+import axios from 'axios';
 
 const toast = useToast();
 const userStore = useUserStore();
@@ -11,11 +12,23 @@ userStore.restoreToken();
 const user = ref(userStore.user);
 const editMode = ref(false);
 
-const saveProfile = () => {
-    // Add your logic for saving the profile here
-    editMode.value = false;
-    toast.success('Profile edited successfully!');
+const saveProfile = async () => {
+    try {
+        const response = await axios.post('http://laravel.test/api/update-profile', user.value);
+
+        if (response.data.success) {
+            userStore.user = response.data.user; // Update the userStore with the new user data
+            editMode.value = false;
+            toast.success('Profile edited successfully!');
+        } else {
+            toast.error('Failed to edit profile');
+        }
+    } catch (error) {
+        console.error(error);
+        toast.error('An error occurred while editing the profile');
+    }
 };
+
 </script>
 
 <template>
@@ -26,7 +39,7 @@ const saveProfile = () => {
                     <h1 class="greeting">Welcome, <span class="username">{{ user.name }}</span></h1>
                     <p><strong>Email:</strong> {{ user.email }}</p>
                     <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
-                    <p><strong>Joined:</strong> {{ user.joined }}</p>
+                    <p><strong>Balance:</strong> {{ user.balance }}</p>
                     <button class="btn btn-primary" @click="editMode = !editMode">Edit Profile</button>
                 </div>
                 <div v-if="editMode" class="col-md-6 mt-3 d-flex flex-column justify-content-center edit-form">
@@ -37,8 +50,8 @@ const saveProfile = () => {
                     <div class="mt-2 todo-box">TODO</div>
                 </div>
             </div>
-            <img src="C:\Users\Tiago\Desktop\Coisas mais Random\vski.jpg" alt="User photo"
-                class="user-photo rounded-circle">
+            <img :src="userStore.user.photo_url ? `http://laravel.test/storage/fotos/${user.photo_url}` : require('@/assets/placeholder.jpg')"
+                alt="User photo" class="user-photo rounded-circle">
         </div>
     </div>
 </template>
@@ -102,4 +115,5 @@ const saveProfile = () => {
 
 .edit-form {
     margin-left: -50px;
-}</style>
+}
+</style>
