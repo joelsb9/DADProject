@@ -37,7 +37,7 @@ const isLoggedIn = ref(false)
 
 // On component mount, check if the user is already logged in
 onMounted(async () => {
-  isLoggedIn.value = await userStore.restoreToken()  
+  isLoggedIn.value = await userStore.restoreToken()
   //console.log('isLoggedIn.value: ', isLoggedIn.value)
 })
 
@@ -52,6 +52,10 @@ onMounted(async () => {
 </template>
 
 <style>
+html {
+  background-color: #62beff;
+}
+
 #app {
   display: flex;
   flex-direction: column;
