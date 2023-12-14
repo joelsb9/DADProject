@@ -11,7 +11,7 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'vcard' => 'required|exists:vcards,phone_number',
+            'type' => 'required|in:C,D',
+            'name' => 'required|string|max:255',
+            'custom_options' => 'nullable|json',
+            'custom_data' => 'nullable|json',
         ];
     }
 }
