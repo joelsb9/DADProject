@@ -1,8 +1,16 @@
-<script>
-export default {
-    name: 'HomePage',
-    // Add your component logic here
-}
+<script setup>
+import { ref } from 'vue';
+import { useToast } from "vue-toastification";
+import { useUserStore } from './stores/user.js';
+
+const toast = useToast();
+const userStore = useUserStore();
+
+userStore.restoreToken();
+
+const user = ref(userStore.user);
+const editMode = ref(false);
+
 </script>
 
 <template>

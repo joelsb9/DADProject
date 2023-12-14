@@ -21,7 +21,7 @@ const login = async () => {
 
         toast.success('Vcard ' + userStore.userName + ' logged in');
 
-        router.push('/');
+        router.push('/homepage');
     } else {
         // Clear the password field in case of invalid credentials
         credentials.value.password = '';
