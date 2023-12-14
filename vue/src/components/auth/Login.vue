@@ -19,11 +19,11 @@ const credentials = ref({
 const login = async () => {
     if (await userStore.login(credentials.value)) {
         toast.success('Vcard ' + userStore.userName + ' logged in')
-        router.back()
+        router.push({ name: 'Homepage' })
     } else {
         credentials.value.password = ''
         toast.error('User credentials are invalid!')
-        
+
     }
 }
 // const goToRegister = () => {
@@ -147,5 +147,6 @@ button:hover {
 .register-link:hover {
     text-decoration: underline;
     /* Underline on hover */
-}</style>
+}
+</style>
     

@@ -23,6 +23,18 @@ async function leaveAccount() {
         toast.error('Problem logging out of the application!')
     }
 }
+async function goToTransactions() {
+    router.push({ name: 'Transactions' })
+}
+async function goToHomePage() {
+    router.push({ name: 'Homepage' })
+}
+async function goToStatistics() {
+    router.push({ name: 'Statistics' })
+}
+async function goToProfile() {
+    router.push({ name: 'Profile' })
+}
 
 </script>
   
@@ -31,17 +43,36 @@ async function leaveAccount() {
     <div class="navbar">
         <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist"
             style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
-            <li class="nav-item" role="presentation">
-                <router-link :to="{ name: 'Home' }" class="nav-link active rounded-5" id="home-tab2" data-bs-toggle="tab" type="button"
-                    role="tab"  :aria-selected="$route.name === 'Home' ? 'true' : 'false'"><i class="bi bi-house" @click.prevent></i> Home</router-link>
+            <li class="nav-item" role="presentation" @click="goToHomePage">
+                <router-link to="/homepage" :class="['nav-link', 'rounded-5', $route.path === '/homepage' ? 'active' : '']"
+                    id="home-tab2" data-bs-toggle="tab" type="button" role="tab"
+                    :aria-selected="$route.name === 'Home' ? 'true' : 'false'" @click.prevent>
+                    <i class="bi bi-house"></i> Home
+                </router-link>
             </li>
-            <li class="nav-item" role="presentation">
-                <router-link :to="{ name: 'Transactions' }" class="nav-link rounded-5" id="profile-tab2" data-bs-toggle="tab"
-                    type="button" role="tab"  :aria-selected="$route.name === 'Transactions' ? 'true' : 'false'" ><i class="bi bi-cash"></i> Transactions</router-link>
+            <li class="nav-item" role="presentation" @click="goToTransactions">
+                <router-link :to="'/transactions'"
+                    :class="['nav-link', 'rounded-5', $route.path === '/transactions' ? 'active' : '']" id="profile-tab2"
+                    data-bs-toggle="tab" type="button" role="tab"
+                    :aria-selected="$route.name === 'Transactions' ? 'true' : 'false'">
+                    <i class="bi bi-cash"></i> Transactions
+                </router-link>
             </li>
-            <li class="nav-item" role="presentation">
-                <router-link :to="{ name: 'Profile' }" class="nav-link rounded-5" id="contact-tab2" data-bs-toggle="tab" type="button"
-                    role="tab"  :aria-selected="$route.name === 'Profile' ? 'true' : 'false'" @click.prevent><i class="bi bi-person"></i> Profile</router-link>
+            <li class="nav-item" role="presentation" @click="goToProfile">
+                <router-link :to="{ name: 'Profile' }"
+                    :class="['nav-link', 'rounded-5', $route.name === 'Profile' ? 'active' : '']" id="contact-tab2"
+                    data-bs-toggle="tab" type="button" role="tab"
+                    :aria-selected="$route.name === 'Profile' ? 'true' : 'false'" @click.prevent>
+                    <i class="bi bi-person"></i> Profile
+                </router-link>
+            </li>
+            <li class="nav-item" role="presentation" @click="goToStatistics">
+                <router-link :to="{ name: 'Statistics' }"
+                    :class="['nav-link', 'rounded-5', $route.name === 'Statistics' ? 'active' : '']" id="contact-tab2"
+                    data-bs-toggle="tab" type="button" role="tab"
+                    :aria-selected="$route.name === 'Statistics' ? 'true' : 'false'" @click.prevent>
+                    <i class="bi bi-bar-chart-line-fill"></i> Statistics
+                </router-link>
             </li>
             <li class="nav-item" role="presentation" @click="leaveAccount">
                 <a href="#" class="nav-link rounded-5" id="contact-tab2" data-bs-toggle="tab" type="button" role="tab"
