@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Vcard;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\DefaultCategory;
 use App\Services\Base64Services;
@@ -13,25 +14,31 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreVcardRequest;
 use App\Http\Requests\UpdateVcardRequest;
 use App\Http\Requests\UpdateAdminVcardPasswordRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class VcardController extends Controller {
-    private function storeBase64AsFile(VCard $vcard, string $base64String) {
-        $targetDir = storage_path('app/public/vcard_photos');
-        $newfilename = $vcard->id."_".rand(10000, 19999);
+class VcardController extends Controller
+{
+    private function storeBase64AsFile(VCard $vcard, string $base64String)
+    {
+        $targetDir = storage_path('app/public/fotos');
+        $newfilename = $vcard->phone_number . "_" . rand(1000,9999);
         $base64Service = new Base64Services();
         return $base64Service->saveFile($base64String, $targetDir, $newfilename);
     }
 
-    public function index() {
+    public function index()
+    {
         return VcardResource::collection(Vcard::withTrashed()->paginate(10));
     }
 
 
-    public function show(Vcard $vcard) {
+    public function show(Vcard $vcard)
+    {
         return new VcardResource($vcard);
     }
 
-    public function store(StoreVcardRequest $request) {
+    public function store(StoreVcardRequest $request)
+    {
         $dataToSave = $request->validated();
 
         $vcard = new Vcard();
@@ -46,25 +53,35 @@ class VcardController extends Controller {
             $dataToSave["base64ImagePhoto"] : ($dataToSave["base64ImagePhoto"] ?? null);
         unset($dataToSave["base64ImagePhoto"]);
 
-        if($base64ImagePhoto) {
+        if ($base64ImagePhoto) {
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
 
-        if($vcard->save()) {
-            //$vcard->sendEmailVerificationNotification();
+        $vcard->save();
+        try {
+            $vcard = Vcard::findOrFail($dataToSave['phone_number']);
+            // Your code here
+        } catch (ModelNotFoundException $e) {
+            // Handle the case where the Vcard with the given phone_number was not found
+            // For example, return a response indicating that the Vcard does not exist.
+            return response()->json(['error' => 'Vcard not found'], 404);
+        }
+        //$vcard->sendEmailVerificationNotification();
 
-            // Fetch default categories
-            $defaultCategories = DefaultCategory::all();
+        // Fetch default categories
+        $defaultCategories = DefaultCategory::all();
 
-            // Create categories for the new vCard based on default categories
-            foreach($defaultCategories as $defaultCategory) {
-                $vcard->categories()->create([
-                    'type' => $defaultCategory->type,
-                    'name' => $defaultCategory->name,
-                    'custom_options' => $defaultCategory->custom_options,
-                    'custom_data' => $defaultCategory->custom_data,
-                ]);
-            }
+        // Create categories for the new vCard based on default categories
+        foreach ($defaultCategories as $defaultCategory) {
+            $category = Category::create([
+                'vcard' => $dataToSave['phone_number'],
+                'type' => $defaultCategory->type,
+                'name' => $defaultCategory->name,
+                'custom_options' => $defaultCategory->custom_options,
+                'custom_data' => $defaultCategory->custom_data,
+            ]);
+            $category->save();
+
         }
         return new VcardResource($vcard);
     }
@@ -78,7 +95,8 @@ class VcardController extends Controller {
     //     return new VcardResource($vcard);
     // }
 
-    public function update(UpdateVcardRequest $request, Vcard $vcard) {
+    public function update(UpdateVcardRequest $request, Vcard $vcard)
+    {
         $dataToSave = $request->validated();
 
         $vcard->fill($dataToSave);
@@ -87,15 +105,15 @@ class VcardController extends Controller {
         // Delete previous photo file if a new file is uploaded
         $base64ImagePhoto = array_key_exists("base64ImagePhoto", $dataToSave) ?
             $dataToSave["base64ImagePhoto"] : null;
-        if($vcard->photo_url && $base64ImagePhoto) {
-            if(Storage::exists('public/vcard_photos/'.$vcard->photo_url)) {
-                Storage::delete('public/vcard_photos/'.$vcard->photo_url);
+        if ($vcard->photo_url && $base64ImagePhoto) {
+            if (Storage::exists('public/vcard_photos/' . $vcard->photo_url)) {
+                Storage::delete('public/vcard_photos/' . $vcard->photo_url);
             }
             $vcard->photo_url = null;
         }
 
         // Create a new photo file from base64 content
-        if($base64ImagePhoto) {
+        if ($base64ImagePhoto) {
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
 
@@ -103,7 +121,8 @@ class VcardController extends Controller {
 
         return new VCardResource($vcard);
     }
-    public function update_password(UpdateAdminVcardPasswordRequest $request, Vcard $vcard) {
+    public function update_password(UpdateAdminVcardPasswordRequest $request, Vcard $vcard)
+    {
         // Check if the current user is authenticated
         // if (!Auth::check() || !Auth::user()->is($vcard)) {
         //     return response()->json(['message' => 'Unauthorized'], 401);
@@ -115,7 +134,8 @@ class VcardController extends Controller {
 
         return new VcardResource($vcard);
     }
-    public function show_me(Request $request) {
+    public function show_me(Request $request)
+    {
         $user = $request->user();
         // Check if the user is authenticated
         if (!$user) {
@@ -135,21 +155,29 @@ class VcardController extends Controller {
 
 
 
-    public function delete(Vcard $vcard) {
+    public function destroy(Vcard $vcard)
+    {
         // Delete the photo file
-        if($vcard->photo_url) {
-            if(Storage::exists('public/vcard_photos/'.$vcard->photo_url)) {
-                Storage::delete('public/vcard_photos/'.$vcard->photo_url);
+        if ($vcard->photo_url) {
+            if (Storage::exists('public/vcard_photos/' . $vcard->photo_url)) {
+                Storage::delete('public/vcard_photos/' . $vcard->photo_url);
             }
         }
 
-        // Soft delete the vCard and associated transactions
+        // Soft delete the vCard ,associated transactions, pairTransactions and categories(but categories are not in the vcard table only on the category table)
+        $categories = Category::where('vcard', $vcard->phone_number)->get();
+        foreach ($categories as $category) {
+            $category->delete();
+        }
+        $vcard->transactions()->delete();
+        $vcard->pairTransactions()->delete();
         $vcard->delete();
 
         return response()->json(['message' => 'VCard deleted successfully']);
     }
 
-    public function restore($vcardId) {
+    public function restore($vcardId)
+    {
         // Restore a soft-deleted vCard
         $vcard = Vcard::withTrashed()->find($vcardId);
         $vcard->restore();

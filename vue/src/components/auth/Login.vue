@@ -18,12 +18,14 @@ const credentials = ref({
 
 const login = async () => {
     if (await userStore.login(credentials.value)) {
-        toast.success('Vcard ' + userStore.userName + ' logged in')
-        router.push({ name: 'Homepage' })
-    } else {
-        credentials.value.password = ''
-        toast.error('User credentials are invalid!')
 
+        toast.success('Vcard ' + userStore.userName + ' logged in');
+
+        router.push('/');
+    } else {
+        // Clear the password field in case of invalid credentials
+        credentials.value.password = '';
+        toast.error('User credentials are invalid!');
     }
 }
 // const goToRegister = () => {

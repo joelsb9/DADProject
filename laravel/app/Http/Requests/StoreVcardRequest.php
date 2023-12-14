@@ -22,10 +22,10 @@ class StoreVcardRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone_number' => 'required|digits:9|unique:vcards,phone_number',
+            'phone_number' => 'required|regex:/^9\d{8}$/|unique:vcards,phone_number',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:vcards,email',
-            'photo_url' => 'sometimes|url',
+            'email' => 'required|email',
+            'photo_url' => 'sometimes',
             'password' => 'required|string|min:3',
             'confirmation_code' => 'required|string|min:3',
             'blocked' => 'sometimes|in:0,1',
@@ -33,6 +33,7 @@ class StoreVcardRequest extends FormRequest
             'max_debit' => 'sometimes|numeric|min:0',
             'custom_options' => 'nullable|json',
             'custom_data' => 'nullable|json',
+            'base64ImagePhoto' => 'sometimes|string',
         ];
     }
 }
