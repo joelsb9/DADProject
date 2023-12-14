@@ -10,6 +10,7 @@ class Vcard extends Model
 {
     use HasFactory, SoftDeletes;
     protected $primaryKey = 'phone_number';
+    protected $keyType = 'string';
     protected $fillable = [
         'phone_number',
         'name',
@@ -41,4 +42,5 @@ class Vcard extends Model
     {
         return $this->hasMany(Transaction::class, 'pair_vcard', 'phone_number');
     }
+
 }

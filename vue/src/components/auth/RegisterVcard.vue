@@ -1,68 +1,111 @@
 <script setup>
-import { ref, inject, computed } from 'vue';
-import { useRouter, RouterLink, RouterView } from 'vue-router'
+import { ref, toRefs, computed } from 'vue';
+import { useRouter, onBeforeRouteLeave, RouterView } from 'vue-router'
+import { useUserStore } from '../stores/user';
+import { useToast } from 'vue-toastification';
+import axios from 'axios'
 import avatarNone from '@/assets/avatar-none.png'
-const axios = inject('axios')
 
-const previewImage =ref(avatarNone)
+//const previewImage = ref(avatarNone)
 const router = useRouter()
-
+const userStore = useUserStore()
+const toast = useToast()
+//const socket = inject("socket")
+const password_confirmation = ref('');
+const confirm_confirmation_code = ref('');
+const inputPhotoFile = ref(null);
 
 const formData = ref({
   name: '',
   email: '',
   phone_number: '',
   password: '',
-  password_confirmation: '',
   confirmation_code: '',
-  confirm_confirmation_code: '',
-  photo: previewImage,
-  // Add other fields as needed
+  base64ImagePhoto: avatarNone,
 });
 
-const register = () => {
-  // Create a FormData object to handle file upload
-  const formDataForApi = new FormData();
-  for (const key in formData) {
-    formDataForApi.append(key, formData[key]);
-  }
+const credentials = ref({
+  username: '',
+  password: ''
+})
 
-  // Make an API call to your Laravel backend to handle registration
-  // You can use Axios or another HTTP library for this purpose
-  axios.post('/api/register', formDataForApi)
-    .then(response => {
-      // Handle success, e.g., redirect to a new page
-      console.log(response.data);
-    })
-    .catch(error => {
-      // Handle error, e.g., show validation errors
-      console.error(error.response.data);
-    });
+const register = async () => {
+  // Create a FormData object to handle file upload
+  try {
+    // Make an API call to your Laravel backend to handle registration
+    // You can use Axios or another HTTP library for this purpose
+    console.log('formData.value: ', formData.value) 
+    const response = await axios.post('register', formData.value)
+    // Handle success, e.g., redirect to a new page
+    toast.success('Vcard #' + formData.value.phone_number + ' registered successfully.')
+    credentials.value.username = formData.value.phone_number
+    credentials.value.password = formData.value.password
+    await userStore.login(credentials.value)
+    router.push('/');
+    console.log(response.data);
+    //    socket.emit('insertedUser', user.value)
+  }
+  catch (error) {
+    if (error.response && error.response.status === 422) {
+      //errors.value = error.response.data.errors
+      toast.error('User was not registered due to validation errors!')
+    } else {
+      console.log(error)
+      toast.error('User was not registered due to unknown server error!')
+    }
+  }
 };
 
 const goBack = () => {
   router.back()
 }
 
-const save = () => {
-  const userToSave = editingUser.value
-  userToSave.deletePhotoOnServer = deletePhotoOnTheServer.value
-  userToSave.base64ImagePhoto = editingImageAsBase64.value
-  emit("save", userToSave);
-}
+//let originalValueStr = ''
 
 function uploadImage(e) {
-  const image = e.target.files[0];
-  const reader = new FileReader();
-  reader.readAsDataURL(image);
-  reader.onload = e => {
-    previewImage.value = e.target.result;
-    //console.log(this.previewImage);
-  };
+  try {
+    const file = e.target.files[0]
+    if (!file) {
+      formData.value.base64ImagePhoto = null
+    } else {
+      const reader = new FileReader()
+      reader.addEventListener('load', (e) => {
+        // convert image file to base64 string
+        formData.value.base64ImagePhoto = e.target.result
+      },
+        false,
+      )
+      if (file) {
+        reader.readAsDataURL(file)
+      }
+    }
+  } catch (error) {
+    formData.value.base64ImagePhoto = null
+  }
+  // const image = e.target.files[0];
+  // const reader = new FileReader();
+  // reader.readAsDataURL(image);
+  // reader.onload = e => {
+  //   formData.value.base64ImagePhoto = e.target.result;
+  //   //console.log(this.previewImage);
+  // };
 }
-function cleanPhoto(){
-  previewImage.value = avatarNone
+function cleanPhoto() {
+  formData.value.base64ImagePhoto = null;
 }
+
+// onBeforeRouteLeave((to, from, next) => {
+//   nextCallBack = null
+//   let newValueStr = JSON.stringify(user.value)
+//   if (originalValueStr != newValueStr) {
+//     // Some value has changed - only leave after confirmation
+//     nextCallBack = next
+//     confirmationLeaveDialog.value.show()
+//   } else {
+//     // No value has changed, so we can leave the component without confirming
+//     next()
+//   }
+// })
 
 </script>
 
@@ -87,7 +130,7 @@ function cleanPhoto(){
             </div>
             <div class="form-group">
               <label for="password_confirmation">Confirm Password:</label>
-              <input type="password" v-model="formData.password_confirmation" required />
+              <input type="password" v-model="password_confirmation" required />
             </div>
             <div class="form-group">
               <label for="confirmation_code">Code:</label>
@@ -95,7 +138,7 @@ function cleanPhoto(){
             </div>
             <div class="form-group">
               <label for="confirm_confirmation_code">Confirm Code:</label>
-              <input type="text" v-model="formData.confirm_confirmation_code" required />
+              <input type="text" v-model="confirm_confirmation_code" required />
             </div>
           </div>
           <div class="form-group flex-column justify-content-between">
@@ -104,14 +147,14 @@ function cleanPhoto(){
               <input type="email" v-model="formData.email" required />
             </div>
             <div class="fixed-size-container">
-              <img :src="previewImage" alt="Uploaded Photo" class="uploaded-photo" />
+              <img :src="formData.base64ImagePhoto" alt="Uploaded Photo" class="uploaded-photo" />
             </div>
             <div class="d-flex justify-content-between flex-wrap align-items-baseline">
-              <label  for="inputPhoto" class="labels flex-grow-1 mx-1">Carregar</label>
+              <label for="inputPhoto" class="labels flex-grow-1 mx-1">Carregar</label>
               <label class="labels flex-grow-1 mx-1" @click.prevent="cleanPhoto">Apagar</label>
             </div>
             <div>
-              <field-error-message :errors="errors" fieldName="base64ImagePhoto"></field-error-message>
+              <!-- <field-error-message :errors="errors" fieldName="base64ImagePhoto"></field-error-message> -->
             </div>
           </div>
         </div>
@@ -126,7 +169,7 @@ function cleanPhoto(){
   
   
 <style scoped>
-.labels{
+.labels {
   padding: 10px;
   background-color: #62beff;
   /* Blue Ocean color for the button */
@@ -138,6 +181,7 @@ function cleanPhoto(){
   margin-top: 10px;
   text-align: center;
 }
+
 .labels:hover {
   background-color: #005580;
   /* Darker shade on hover */
@@ -164,16 +208,21 @@ function cleanPhoto(){
 
 
 .fixed-size-container {
-  width: 300px; /* Set your desired width */
-  height: 376px; /* Set your desired height */
-  overflow: hidden; /* Ensure the image doesn't overflow the container */
+  width: 300px;
+  /* Set your desired width */
+  height: 376px;
+  /* Set your desired height */
+  overflow: hidden;
+  /* Ensure the image doesn't overflow the container */
 }
+
 .uploaded-photo {
   width: 100%;
   height: 100%;
   max-width: px;
   max-height: 376px;
-  object-fit:scale-down; /* or object-fit: contain; depending on your requirements */
+  object-fit: scale-down;
+  /* or object-fit: contain; depending on your requirements */
   border-radius: 2px;
 }
 

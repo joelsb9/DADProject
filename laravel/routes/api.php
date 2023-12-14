@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\DefaultCategoryController;
 //Auth::routes();
 
 Route::post('login', [AuthController::class, 'login']);
-
+Route::post('register', [VcardController::class, 'store']);
 
 Route::middleware('auth:api')->group(function () {
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getTransactionsForVcard']);
