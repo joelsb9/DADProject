@@ -3,8 +3,12 @@ import { useUserStore } from '../components/stores/user.js'
 import HomeView from '../views/HomeView.vue'
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
+import Homepage from "../components/Homepage.vue"
 import RegisterVcard from "../components/auth/RegisterVcard.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
+import Transactions from '../components/transactions/Transactions.vue'
+import Statistics from '../components/statistics/Statistics.vue'
+import Profile from '../components/profile/Profile.vue'
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
 // import Admins from "../components/admins/Admins.vue";
@@ -49,16 +53,36 @@ const router = createRouter({
       name: 'Dashboard',
       component: Dashboard
     },
-    {
+    /*{
       path: '/transactions',
       name: 'Transactions',
       //component: Transactions,
-    },
+    },*/
     {
       path: '/profile',
       name: 'Profile',
       //component: Profile,
-    }
+    },
+    {
+      path: '/homepage',
+      name: 'Homepage',
+      component: Homepage
+    },
+    {
+      path: '/transactions',
+      name: 'Transactions',
+      component: Transactions
+    },
+    {
+      path: '/statistics',
+      name: 'Statistics',
+      component: Statistics
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile
+    },
   ]
 });
 // {
