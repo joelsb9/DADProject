@@ -13,7 +13,6 @@ const toast = useToast()
 //const socket = inject("socket")
 const password_confirmation = ref('');
 const confirm_confirmation_code = ref('');
-const inputPhotoFile = ref(null);
 
 const formData = ref({
   name: '',
