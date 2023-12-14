@@ -17,7 +17,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
-
 const app = createApp(App)
 
 const apiDomain = import.meta.env.VITE_API_DOMAIN
@@ -26,7 +25,7 @@ const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
 app.provide('socket', io(wsConnection))
 
-app.provide('serverBaseUrl', apiDomain)  
+app.provide('serverBaseUrl', apiDomain)
 // Default Axios configuration
 axios.defaults.baseURL = apiDomain + '/api'
 axios.defaults.headers.common['Content-type'] = 'application/json'
@@ -46,6 +45,7 @@ app.use(Toast, {
   icon: true,
   rtl: false
 })
+
 
 //console.log(apiDomain+'/api')
 app.use(createPinia())
