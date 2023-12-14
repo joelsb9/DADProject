@@ -7,17 +7,21 @@ import { createPinia } from 'pinia'
 import router from './router'
 import App from './App.vue'
 import Toast from "vue-toastification"
-import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 // Import the Toast CSS (or use your own)!
 import "vue-toastification/dist/index.css"
+// Import Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+// Import FontAwesome icons (or any other icon library)
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 
 const app = createApp(App)
 
 const apiDomain = import.meta.env.VITE_API_DOMAIN
-console.log(apiDomain)
+//console.log(apiDomain)
 const wsConnection = import.meta.env.VITE_WS_CONNECTION
 
 app.provide('socket', io(wsConnection))

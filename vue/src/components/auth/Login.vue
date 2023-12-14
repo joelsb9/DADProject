@@ -2,36 +2,34 @@
 //import axios from 'axios'
 import { useToast } from "vue-toastification"
 import { useRouter, RouterLink, RouterView } from 'vue-router'
-import { useAdminStore } from '../stores/admin.js'
-import { useVcardStore } from '../stores/vcard.js'
+import { useUserStore } from '../stores/user.js'
 import { ref } from 'vue'
 
 const toast = useToast()
 const router = useRouter()
-const adminStore = useAdminStore()
-const vcardStore = useVcardStore()
+const userStore = useUserStore()
 
 const credentials = ref({
     username: '',
     password: ''
 })
 
-const emit = defineEmits(['login','registerVcard'])
+//const emit = defineEmits(['login','registerVcard'])
 
 const login = async () => {
-    if (await vcardStore.login(credentials.value)) {
-        toast.success('Vcard ' + vcardStore.vcardName + ' has entered the application.')
-        emit('login')
+    if (await userStore.login(credentials.value)) {
+        toast.success('Vcard ' + userStore.userName + ' logged in')
         router.back()
     } else {
         credentials.value.password = ''
         toast.error('User credentials are invalid!')
+        
     }
 }
-const goToRegister = () => {
-    // Use router to navigate to the register page
-    router.push({ name: 'RegisterVcard' })
-}
+// const goToRegister = () => {
+//     // Use router to navigate to the register page
+//     router.push({ name: 'RegisterVcard' })
+// }
 </script>
 <template>
     <div class="login-container">
@@ -52,8 +50,8 @@ const goToRegister = () => {
             </form>
             <div>
                 <!--Create an hipper link to emit a function-->
-                <RouterLink :to="{name:'RegisterVcard'}" :class="{ active: $route.name === 'RegisterVcard'}"><i> Register </i></RouterLink>
-                <router-view/>
+                <RouterLink :to="{ name: 'RegisterVcard' }"><i> Register </i></RouterLink>
+                <!-- <router-view/> -->
             </div>
         </div>
     </div>
@@ -65,7 +63,7 @@ const goToRegister = () => {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #62beff;
+    /*background-color: ;*/
     /* Blue Ocean color */
 }
 

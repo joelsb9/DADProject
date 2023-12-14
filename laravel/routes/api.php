@@ -10,12 +10,12 @@ use App\Http\Controllers\Api\DefaultCategoryController;
 
 //Auth::routes();
 
-Route::post('auth/login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
 
 
 Route::middleware('auth:api')->group(function () {
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getTransactionsForVcard']);
-        Route::get('vcards/me', [VcardController::class, 'show_me']);
+        Route::get('vcards/me', [VcardController::class, 'show_me'])->middleware('auth:api');
         Route::put('vcards/restore/{vcardId}', [VcardController::class, 'restore']);
         Route::put('vcards/{vcard}/password', [VcardController::class, 'update_password']);
         Route::apiResource('vcards', VcardController::class);
