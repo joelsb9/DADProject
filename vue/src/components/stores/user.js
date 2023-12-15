@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import avatarNoneUrl from '@/assets/avatar-none.png'
 //import { useProjectsStore } from "./projects.js"
 import { useToast } from "vue-toastification"
+import { useTransactionsStore } from './transactions.js'
 
 export const useUserStore = defineStore('user', () => {
     const socket = inject("socket")
@@ -20,18 +21,28 @@ export const useUserStore = defineStore('user', () => {
 
     const userType = computed(() => user.value?.type ?? 'M')
 
+    const transactionsStore = useTransactionsStore()
+
     const userPhotoUrl = computed(() =>
         user.value?.photo_url
-        ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
-        : avatarNoneUrl)
+            ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
+            : avatarNoneUrl)
 
     async function loadUser() {
         try {
             const response = await axios.get('vcards/me')
             user.value = response.data
+
+            // Load transactions after the user data is loaded
+            if (user.value && user.value.phone_number) {
+                await transactionsStore.loadTransactions(user.value.phone_number)
+            }
         } catch (error) {
+            console.error('Error loading user or transactions:', error) // Log the error
+
             clearUser()
-            throw error
+
+            // Don't re-throw the error
         }
     }
 
@@ -44,15 +55,17 @@ export const useUserStore = defineStore('user', () => {
 
     async function login(credentials) {
         try {
-            const response = await axios.post('login', credentials) 
+            const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
             socket.emit('loggedIn', user.value)
-            //await projectsStore.loadProjects()
+
+            await loadUser()
+
             return true
         }
-        catch(error) {
+        catch (error) {
             clearUser()
             return false
         }
@@ -61,7 +74,7 @@ export const useUserStore = defineStore('user', () => {
     async function logout() {
         try {
             let response = await axios.post('http://laravel.test/api/logout');
-    
+
             // Assuming a successful logout response has a specific status code (e.g., 200)
             if (response.status === 200) {
                 socket.emit('loggedOut', user.value);
@@ -85,7 +98,7 @@ export const useUserStore = defineStore('user', () => {
             return 0;
         }
     }
-    
+
 
     async function changePassword(credentials) {
         if (userId.value < 0) {
@@ -99,13 +112,15 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    async function restoreToken () {
+    async function restoreToken() {
         let storedToken = sessionStorage.getItem('token')
         if (storedToken) {
             axios.defaults.headers.common.Authorization = "Bearer " + storedToken
             await loadUser()
             socket.emit('loggedIn', user.value)
-            //await projectsStore.loadProjects()
+
+            await loadUser()
+
             return true
         }
         clearUser()
