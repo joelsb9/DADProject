@@ -28,28 +28,12 @@ class Transaction extends Model
         'description'
     ];
     protected $dates = ['date','datetime'];
-
+    protected $appends = ['type_name'];
     protected $casts = [
-        //'date' => 'date',
         'datetime' => 'datetime',
         'custom_options' => 'json',
         'custom_data' => 'json'
     ];
-
-    //if we need to set default values for date and datetime
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     // Use the 'creating' event to automatically set the 'date' and 'datetime' columns
-    //     static::creating(function ($transaction) {
-    //         // Set the 'date' column to the current date
-    //         $transaction->date = Carbon::now()->toDateString();
-
-    //         // Set the 'datetime' column to the current date and time
-    //         $transaction->datetime = Carbon::now();
-    //     });
-    // }
 
     public function getTypeNameAttribute()
     {
