@@ -28,6 +28,7 @@ export const useUserStore = defineStore('user', () => {
             ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
             : avatarNoneUrl)
 
+
     async function loadUser() {
         try {
             const response = await axios.get('vcards/me')
@@ -146,6 +147,7 @@ export const useUserStore = defineStore('user', () => {
         userName,
         userType,
         userPhotoUrl,
+        serverBaseUrl,
         loadUser,
         clearUser,
         login,

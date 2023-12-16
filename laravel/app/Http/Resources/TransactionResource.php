@@ -31,7 +31,7 @@ class TransactionResource extends JsonResource
                     "pair_vcard_photo_url" => $this->pair_vcard->photo_url,
                     "category_id" => $this->category_id,
                     //"category_name" => $this->category->name,
-                    "desciption" => $this->description,
+                    "description" => $this->description,
                     'custom_options' => json_decode($this->custom_options),
                     'custom_data' => json_decode($this->custom_data),
                     //"transactions" => TransactionResource::collection($this->tasks->sortByDesc('id'))
@@ -51,7 +51,7 @@ class TransactionResource extends JsonResource
                     "pair_transaction" => $this->pair_transaction,
                     "pair_vcard_phone_number" => $this->pair_vcard,
                     "category_id" => $this->category_id,
-                    "desciption" => $this->description,
+                    "description" => $this->description,
                     'custom_options' => json_decode($this->custom_options),
                     'custom_data' => json_decode($this->custom_data),
                 ];

@@ -13,6 +13,14 @@ watch(props, (newProps) => {
         transactionsStore.loadTransactions(newProps.vcard)
     }
 })
+
+const expandedRow = ref(null);
+
+const handleEyeClick = (index) => {
+    console.log(`Eye icon clicked on row ${index}`);
+    expandedRow.value = expandedRow.value === index ? null : index;
+};
+
 </script>
 
 <template>
@@ -34,17 +42,31 @@ watch(props, (newProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="transaction in transactionsStore.transactions" :key="transaction.id">
-                        <td>{{ transaction.date }}</td>
-                        <td>{{ transaction.type }}</td>
-                        <td>{{ transaction.value }}</td>
-                        <td>{{ transaction.old_balance }}</td>
-                        <td>{{ transaction.new_balance }}</td>
-                        <td>{{ transaction.payment_type }}</td>
-                        <td>{{ transaction.payment_reference }}</td>
-                        <td>{{ transaction.category_id }}</td>
-                        <td><i class="bi bi-eye-fill"></i></td>
-                    </tr>
+                    <template v-for="(transaction, index) in transactionsStore.transactions" :key="transaction.id">
+                        <tr>
+                            <td>{{ transaction.date }}</td>
+                            <td>{{ transaction.type }}</td>
+                            <td>{{ transaction.value }}</td>
+                            <td>{{ transaction.old_balance }}</td>
+                            <td>{{ transaction.new_balance }}</td>
+                            <td>{{ transaction.payment_type }}</td>
+                            <td>{{ transaction.payment_reference }}</td>
+                            <td>{{ transaction.category_id }}</td>
+                            <td>
+                                <i class="bi bi-eye-fill clickable"
+                                    v-if="transaction.description && transaction.description.trim() !== ''"
+                                    @click="handleEyeClick(index)"></i>
+                            </td>
+                        </tr>
+                        <transition name="slide-down">
+                            <tr v-if="expandedRow === index" class="description-row">
+                                <td colspan="9">
+                                    <div class="description-content">Description: {{ transaction.description ?
+                                        transaction.description : 'No Description' }}</div>
+                                </td>
+                            </tr>
+                        </transition>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -52,9 +74,42 @@ watch(props, (newProps) => {
 </template>
 
 <style scoped>
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+    transition: all .3s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+    transform: translateY(10px);
+    opacity: 0;
+}
+
+.description-content {
+    overflow: hidden;
+}
+
+.description-row .description-content {
+    max-height: 100px;
+    /* Adjust this to fit your content */
+}
+
 .profile {
     height: 100vh;
     background-color: #62beff;
+}
+
+.description-row {
+    border-top: none;
+    background-color: #fff;
+    /* Change this to match the color of your other rows */
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 .main-content {
@@ -98,4 +153,5 @@ tbody td {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-}</style>
+}
+</style>

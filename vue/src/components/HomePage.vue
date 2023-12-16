@@ -2,14 +2,18 @@
 import { ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { useUserStore } from './stores/user.js';
+import { useTransactionsStore } from './stores/transactions.js'
 
 const toast = useToast();
 const userStore = useUserStore();
+const transactionsStore = useTransactionsStore();
 
 userStore.restoreToken();
 
 const user = ref(userStore.user);
 const editMode = ref(false);
+
+const lastTransaction = ref(transactionsStore.lastTransaction);
 
 </script>
 
@@ -18,12 +22,20 @@ const editMode = ref(false);
         <div class="main-content">
             <h1 class="greeting">Hello, <span class="username">{{ user && user.name ? user.name : 'Guest' }}</span></h1>
             <div class="section">
-                <h2 class="section-title">Balances</h2>
-                <!-- Add your balances content here -->
+                <div class="balance-section">
+                    <h2 class="section-title">Balance</h2>
+                    <h3 class="balance text-primary">{{ user.balance }}</h3>
+                </div>
             </div>
             <div class="section">
-                <h3 class="section-title">Last Transaction</h3>
-                <!-- Add your last transaction content here -->
+                <div class="transaction-section">
+                    <h3 class="section-title">Last Transaction</h3>
+                    <h3 class="transaction text-primary" v-if="lastTransaction">
+                        {{ lastTransaction ? `${lastTransaction.type === 'C' ? '+' :
+                            '-'}${lastTransaction.value}€ ${lastTransaction.type === 'C' ? 'from' : 'to'}
+                                                ${lastTransaction.payment_reference}` : '' }}
+                    </h3>
+                </div>
             </div>
             <div class="section">
                 <h4 class="section-title">Send Money</h4>
@@ -40,6 +52,18 @@ const editMode = ref(false);
     align-items: center;
     height: 100vh;
     background-color: #62beff;
+}
+
+.balance-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transaction-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .main-content {
@@ -72,7 +96,7 @@ const editMode = ref(false);
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 5px;
-    background-color: #f8f9fa;
+    background-color: #e9e8e8;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease-in-out;
 }

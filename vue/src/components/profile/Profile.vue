@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { useToast } from "vue-toastification";
 import { useUserStore } from '../stores/user.js';
 import axios from 'axios';
@@ -9,12 +9,14 @@ const userStore = useUserStore();
 
 userStore.restoreToken();
 
+const serverBaseUrl = inject('serverBaseUrl');
+
 const user = ref(userStore.user);
 const editMode = ref(false);
 
 const saveProfile = async () => {
     try {
-        const response = await axios.post('http://laravel.test/api/update-profile', user.value);
+        const response = await axios.post(`${serverBaseUrl}/api/vcard/${userStore.value.id}`);
 
         if (response.data.success) {
             userStore.user = response.data.user; // Update the userStore with the new user data
@@ -50,7 +52,8 @@ const saveProfile = async () => {
                     <div class="mt-2 todo-box">TODO</div>
                 </div>
             </div>
-            <img :src="userStore.user.photo_url ? `http://laravel.test/storage/fotos/${user.photo_url}` : require('@/assets/placeholder.jpg')"
+            {{ console.log(userStore.userPhotoUrl) }}
+            <img :src="userStore.userPhotoUrl ? userStore.userPhotoUrl : require('@/assets/placeholder.jpg')"
                 alt="User photo" class="user-photo rounded-circle">
         </div>
     </div>

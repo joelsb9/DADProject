@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useToast } from "vue-toastification"
 import { useUserStore } from './user.js'
@@ -28,6 +28,10 @@ export const useTransactionsStore = defineStore('transactions', () => {
         console.log(response.data);
     };
 
+    const lastTransaction = computed(() => {
+        return transactions.value[transactions.value.length - 1];
+    });
+
     socket.on('insertedTransaction', (insertedTransaction) => {
         transactions.value.push(insertedTransaction)
         toast.success(`Transaction #${insertedTransaction.id} has been added successfully!`)
@@ -44,6 +48,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
     return {
         transactions,
         serverBaseUrl,
+        lastTransaction,
         loadTransactions,
     }
 })
