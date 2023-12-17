@@ -18,6 +18,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('vcards/me', [VcardController::class, 'show_me'])->middleware('auth:api');
         Route::put('vcards/restore/{vcardId}', [VcardController::class, 'restore']);
         Route::put('vcards/{vcard}/password', [VcardController::class, 'update_password']);
+        Route::put('vcards/{vcard}', [VcardController::class, 'update']);
         Route::apiResource('vcards', VcardController::class);
 
 
@@ -36,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::post('categories/{categoryId}/restore', [CategoryController::class, 'restore']);
         Route::apiResource('categories', CategoryController::class);
-
+        
     }
 );
 
