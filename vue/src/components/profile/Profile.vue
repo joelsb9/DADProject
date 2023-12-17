@@ -13,6 +13,7 @@ const serverBaseUrl = inject('serverBaseUrl');
 
 const user = ref(userStore.user);
 const editMode = ref(false);
+const base64ImagePhoto = ref(null);
 
 const saveProfile = async () => {
     const response = await axios.put(`vcards/` + userStore.userId, user.value).then((response) => {
@@ -25,6 +26,45 @@ const saveProfile = async () => {
     });
 
 };
+
+function uploadImage(e) {
+  try {
+    const file = e.target.files[0]
+    if (!file) {
+        base64ImagePhoto.value = null
+        user.value.base64ImagePhoto = null 
+        user.value.photo_url = null 
+    } else {
+      const reader = new FileReader()
+      reader.addEventListener('load', (e) => {
+        // convert image file to base64 string
+        base64ImagePhoto.value = e.target.result
+        user.value.base64ImagePhoto = e.target.result
+        //fetch image file name
+        user.value.photo_url = file.name
+      },
+        false,
+      )
+      if (file) {
+        reader.readAsDataURL(file)
+      }
+    }
+  } catch (error) {
+    base64ImagePhoto.value = null
+    user.value.base64ImagePhoto = null
+    user.value.photo_url = null 
+  }
+  // const image = e.target.files[0];
+  // const reader = new FileReader();
+  // reader.readAsDataURL(image);
+  // reader.onload = e => {
+  //   formData.value.base64ImagePhoto = e.target.result;
+  //   //console.log(this.previewImage);
+  // };
+}
+function cleanPhoto() {
+    base64ImagePhoto.value = null;
+}
 
 </script>
 
@@ -43,12 +83,11 @@ const saveProfile = async () => {
                     <input v-model="user.email" placeholder="Email" class="form-control mb-2">
                     <input v-model="user.phone_number" placeholder="Phone Number" class="form-control mb-2">
                     <input v-model="user.name" placeholder="Name" class="form-control mb-2">
+                    <input type="file" accept="image/*" id="inputPhoto" @change="uploadImage"/>
                     <button class="btn btn-success" @click="saveProfile">Save</button>
-                    <div class="mt-2 todo-box">TODO</div>
                 </div>
             </div>
-            <img :src="user.photo_url ? userStore.userPhotoUrl : require(userStore.userPhotoUrl)" alt="User photo"
-                class="user-photo rounded-circle">
+            <img :src="base64ImagePhoto ?? userStore.userPhotoUrl" alt="User photo">
         </div>
     </div>
 </template>
