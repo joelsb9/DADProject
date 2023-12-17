@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { useToast } from "vue-toastification";
 import { useUserStore } from '../stores/user.js';
 import axios from 'axios';
@@ -9,24 +9,21 @@ const userStore = useUserStore();
 
 userStore.restoreToken();
 
+const serverBaseUrl = inject('serverBaseUrl');
+
 const user = ref(userStore.user);
 const editMode = ref(false);
 
 const saveProfile = async () => {
-    try {
-        const response = await axios.post('http://laravel.test/api/update-profile', user.value);
-
-        if (response.data.success) {
-            userStore.user = response.data.user; // Update the userStore with the new user data
-            editMode.value = false;
-            toast.success('Profile edited successfully!');
-        } else {
-            toast.error('Failed to edit profile');
-        }
-    } catch (error) {
-        console.error(error);
-        toast.error('An error occurred while editing the profile');
-    }
+    const response = await axios.put(`vcards/` + userStore.userId, user.value).then((response) => {
+        user.value = response.data; // Update the userStore with the new user data
+        editMode.value = false;
+        toast.success('Profile edited successfully!');
+    }).catch((error) => {
+        console.log(error);
+        toast.error('Failed to edit profile');
+    });
+    
 };
 
 </script>
@@ -50,7 +47,7 @@ const saveProfile = async () => {
                     <div class="mt-2 todo-box">TODO</div>
                 </div>
             </div>
-            <img :src="userStore.user.photo_url ? `http://laravel.test/storage/fotos/${user.photo_url}` : require('@/assets/placeholder.jpg')"
+            <img :src="user.photo_url ? userStore.userPhotoUrl : require(userStore.userPhotoUrl)"
                 alt="User photo" class="user-photo rounded-circle">
         </div>
     </div>

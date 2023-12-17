@@ -100,28 +100,34 @@ class VcardController extends Controller
     {
         $dataToSave = $request->validated();
 
-        $vcard->fill($dataToSave);
-        $vcard->password = bcrypt($dataToSave['password']);
-
-        // Delete previous photo file if a new file is uploaded
         $base64ImagePhoto = array_key_exists("base64ImagePhoto", $dataToSave) ?
-            $dataToSave["base64ImagePhoto"] : null;
+                        $dataToSave["base64ImagePhoto"] : ($dataToSave["base64ImagePhoto"] ?? null);
+        $deletePhotoOnServer = array_key_exists("deletePhotoOnServer", $dataToSave) && $dataToSave["deletePhotoOnServer"];
+        unset($dataToSave["base64ImagePhoto"]);
+        unset($dataToSave["deletePhotoOnServer"]);
+
+        $vcard->fill($dataToSave);
+        if(isset($dataToSave['password'])){
+            $vcard->password = bcrypt($dataToSave['password']);
+        }
+
         if ($vcard->photo_url && $base64ImagePhoto) {
             if (Storage::exists('public/vcard_photos/' . $vcard->photo_url)) {
                 Storage::delete('public/vcard_photos/' . $vcard->photo_url);
             }
             $vcard->photo_url = null;
         }
-
         // Create a new photo file from base64 content
         if ($base64ImagePhoto) {
             $vcard->photo_url = $this->storeBase64AsFile($vcard, $base64ImagePhoto);
         }
 
         $vcard->save();
+        $vcard->update($request->validated());
 
         return new VCardResource($vcard);
     }
+
     public function update_password(UpdateAdminVcardPasswordRequest $request, Vcard $vcard)
     {
         // Check if the current user is authenticated
@@ -153,8 +159,6 @@ class VcardController extends Controller
         // Return Vcard information using a resource class (assuming you have a VcardResource class)
         return new VcardResource($vcard);
     }
-
-
 
     public function destroy(Vcard $vcard)
     {

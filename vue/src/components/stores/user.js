@@ -17,7 +17,11 @@ export const useUserStore = defineStore('user', () => {
 
     const userName = computed(() => user.value?.name ?? 'Anonymous')
 
+<<<<<<< HEAD
     const userId = ref(-1)
+=======
+    const userId = computed(() => user.value?.phone_number ?? -1)
+>>>>>>> a6606916ad598f270493a30d7e9fa32f7f497417
 
     const userType = ref(-1)
 
@@ -158,6 +162,7 @@ export const useUserStore = defineStore('user', () => {
         userName,
         userType,
         userPhotoUrl,
+        serverBaseUrl,
         loadUser,
         clearUser,
         login,
