@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useToast } from "vue-toastification"
 import { useUserStore } from './user.js'
@@ -9,23 +9,19 @@ import { useUserStore } from './user.js'
 export const useTransactionsStore = defineStore('transactions', () => {
     const socket = inject("socket")
     const toast = useToast()
-    const serverBaseUrl = inject('serverBaseUrl')
 
-    const userStore = useUserStore() // Use the user store
-    console.log(`${serverBaseUrl}/api/transactions`)
-
+    //const userStore = useUserStore() // Use the user store
     const transactions = ref([])
 
-
-    const loadTransactions = async (vcard) => {
-        console.log(`${serverBaseUrl}/api/vcards/${vcard}/transactions`)
-        const response = await axios.get(`${serverBaseUrl}/api/vcards/${vcard}/transactions`, {
+    const loadTransactions = async (vcardId) => {
+        //console.log(`vcards/${vcard}/transactions`)
+        const response = await axios.get(`vcards/${vcardId}/transactions`, {
             params: {
                 columns: 'id,vcard,date,datetime,type,value,old_balance,new_balance,payment_type,payment_reference,pair_transaction,pair_vcard,category_id,description'
             }
         });
         transactions.value = response.data;
-        console.log(response.data);
+        //console.log(response.data);
     };
 
     socket.on('insertedTransaction', (insertedTransaction) => {
@@ -43,7 +39,6 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
     return {
         transactions,
-        serverBaseUrl,
         loadTransactions,
     }
 })

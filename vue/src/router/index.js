@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '../components/stores/user.js'
-import HomeView from '../views/HomeView.vue'
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import Homepage from "../components/Homepage.vue"
@@ -9,6 +8,7 @@ import ChangePassword from "../components/auth/ChangePassword.vue"
 import Transactions from '../components/transactions/Transactions.vue'
 import Statistics from '../components/statistics/Statistics.vue'
 import Profile from '../components/profile/Profile.vue'
+import Admin from '../components/admin/Admin.vue'
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
 // import Admins from "../components/admins/Admins.vue";
@@ -23,7 +23,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: HomeView,
+      component: Homepage,
     },
     {
       path: '/about',
@@ -62,11 +62,6 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       //component: Profile,
-    },
-    {
-      path: '/homepage',
-      name: 'Homepage',
-      component: Homepage
     },
     {
       path: '/transactions',

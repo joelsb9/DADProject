@@ -11,9 +11,15 @@ const userStore = useUserStore();
 async function leaveAccount() {
     // Implement your logic for leaving the account here
     let userName = userStore.userName;
+    let userType = userStore.userType;
     let logout = await userStore.logout();
     if (logout === 1) {
-        toast.success('Vcard ' + userName + ' left')
+        if(userType == 'V'){
+            toast.success('Vcard ' + userName + ' left')
+        }
+        else if(userType == 'A'){
+            toast.success('Admin ' + userName + ' left')
+        }
         router.push({ name: 'Login' })
     }
     else if (logout === -1) {
@@ -27,7 +33,7 @@ async function goToTransactions() {
     router.push({ name: 'Transactions' })
 }
 async function goToHomePage() {
-    router.push({ name: 'Homepage' })
+    router.push({ name: 'Home' })
 }
 async function goToStatistics() {
     router.push({ name: 'Statistics' })
@@ -44,7 +50,7 @@ async function goToProfile() {
         <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist"
             style="--bs-nav-link-color: var(--bs-white); --bs-nav-pills-link-active-color: var(--bs-primary); --bs-nav-pills-link-active-bg: var(--bs-white);">
             <li class="nav-item" role="presentation" @click="goToHomePage">
-                <router-link to="/homepage" :class="['nav-link', 'rounded-5', $route.path === '/homepage' ? 'active' : '']"
+                <router-link to="/" :class="['nav-link', 'rounded-5', $route.path === '/homepage' ? 'active' : '']"
                     id="home-tab2" data-bs-toggle="tab" type="button" role="tab"
                     :aria-selected="$route.name === 'Home' ? 'true' : 'false'" @click.prevent>
                     <i class="bi bi-house"></i> Home
