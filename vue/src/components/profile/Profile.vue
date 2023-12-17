@@ -15,15 +15,20 @@ const user = ref(userStore.user);
 const editMode = ref(false);
 
 const saveProfile = async () => {
-    const response = await axios.put(`vcards/` + userStore.userId, user.value).then((response) => {
-        user.value = response.data; // Update the userStore with the new user data
-        editMode.value = false;
-        toast.success('Profile edited successfully!');
-    }).catch((error) => {
-        console.log(error);
-        toast.error('Failed to edit profile');
-    });
-    
+    try {
+        const response = await axios.post(`${serverBaseUrl}/api/vcard/${userStore.value.id}`);
+
+        if (response.data.success) {
+            userStore.user = response.data.user; // Update the userStore with the new user data
+            editMode.value = false;
+            toast.success('Profile edited successfully!');
+        } else {
+            toast.error('Failed to edit profile');
+        }
+    } catch (error) {
+        console.error(error);
+        toast.error('An error occurred while editing the profile');
+    }
 };
 
 </script>
@@ -47,7 +52,8 @@ const saveProfile = async () => {
                     <div class="mt-2 todo-box">TODO</div>
                 </div>
             </div>
-            <img :src="user.photo_url ? userStore.userPhotoUrl : require(userStore.userPhotoUrl)"
+            {{ console.log(userStore.userPhotoUrl) }}
+            <img :src="userStore.userPhotoUrl ? userStore.userPhotoUrl : require('@/assets/placeholder.jpg')"
                 alt="User photo" class="user-photo rounded-circle">
         </div>
     </div>

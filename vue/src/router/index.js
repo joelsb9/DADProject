@@ -9,6 +9,7 @@ import ChangePassword from "../components/auth/ChangePassword.vue"
 import Transactions from '../components/transactions/Transactions.vue'
 import Statistics from '../components/statistics/Statistics.vue'
 import Profile from '../components/profile/Profile.vue'
+import SendMoney from '../components/transactions/SendMoney.vue'
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
 // import Admins from "../components/admins/Admins.vue";
@@ -82,6 +83,11 @@ const router = createRouter({
       path: '/profile',
       name: 'Profile',
       component: Profile
+    },
+    {
+      path: '/sendMoney',
+      name: 'SendMoney',
+      component: SendMoney
     },
   ]
 });

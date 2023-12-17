@@ -28,6 +28,7 @@ export const useUserStore = defineStore('user', () => {
             ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
             : avatarNoneUrl)
 
+
     async function loadUser() {
         try {
             const response = await axios.get('vcards/me')
@@ -59,7 +60,12 @@ export const useUserStore = defineStore('user', () => {
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
             await loadUser()
-            socket.emit('loggedIn', user.value)
+
+            //socket.emit('loggedIn', user.value)
+
+            socket.on(user.value.phone_number, () => {
+                console.log('You have a new transaction!')
+            })
 
             await loadUser()
 

@@ -1,10 +1,46 @@
 import axios from 'axios'
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useToast } from "vue-toastification"
 import { useUserStore } from './user.js'
 
 
+
+export const sendMoney = async (transaction) => {
+    const toast = useToast()
+    console.log(transaction)
+    const response = await axios.post(`/transactions`, {
+        vcard: transaction.vcard,
+        payment_type: transaction.payment_type,
+        payment_reference: transaction.payment_reference,
+        type: 'D',
+        value: transaction.amount,
+        category_id: transaction.category_id,
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).catch((error) => {
+
+        console.log(error.response.data.message);
+        toast.error(error.response.data.message);
+
+    });
+
+
+    /*if (!response.ok) {
+        if (response.status === 422) {
+
+            throw new Error(data.message);
+        } else {
+            const message = `An error has occurred: ${response.status}`;
+            throw new Error(message);
+        }
+    }*/
+
+    const data = await response.json();
+    return data;
+};
 
 export const useTransactionsStore = defineStore('transactions', () => {
     const socket = inject("socket")
@@ -28,6 +64,10 @@ export const useTransactionsStore = defineStore('transactions', () => {
         console.log(response.data);
     };
 
+    const lastTransaction = computed(() => {
+        return transactions.value[transactions.value.length - 1];
+    });
+
     socket.on('insertedTransaction', (insertedTransaction) => {
         transactions.value.push(insertedTransaction)
         toast.success(`Transaction #${insertedTransaction.id} has been added successfully!`)
@@ -44,6 +84,8 @@ export const useTransactionsStore = defineStore('transactions', () => {
     return {
         transactions,
         serverBaseUrl,
+        lastTransaction,
         loadTransactions,
-    }
+        sendMoney,
+    };
 })
