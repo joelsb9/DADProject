@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";
 import { useUserStore } from './stores/user.js';
 import { useTransactionsStore } from './stores/transactions.js'
@@ -10,10 +11,23 @@ const transactionsStore = useTransactionsStore();
 
 userStore.restoreToken();
 
+const router = useRouter();
 const user = ref(userStore.user);
 const editMode = ref(false);
+const payment_type = ref(["VCARD", "payment12", "payment13", "payment15", "payment132"]);
 
+const selectedTransaction = ref('');
+const selectedUser = ref('');
+const amount = ref(0);
+
+const sendMoney = ref(transactionsStore.sendMoney);
 const lastTransaction = ref(transactionsStore.lastTransaction);
+
+console.log("user: ", user.value.phone_number);
+
+const goToSendMoney = () => {
+    router.push({ name: 'SendMoney' });
+};
 
 </script>
 
@@ -37,15 +51,21 @@ const lastTransaction = ref(transactionsStore.lastTransaction);
                     </h3>
                 </div>
             </div>
-            <div class="section">
+            <div class="section send-money-section">
                 <h4 class="section-title">Send Money</h4>
-                <!-- Add your send money content here -->
+                <button class="btn btn-primary" @click="goToSendMoney">Send</button>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.send-money-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .home {
     display: flex;
     justify-content: center;

@@ -6,6 +6,42 @@ import { useUserStore } from './user.js'
 
 
 
+export const sendMoney = async (transaction) => {
+    const toast = useToast()
+    console.log(transaction)
+    const response = await axios.post(`/transactions`, {
+        vcard: transaction.vcard,
+        payment_type: transaction.payment_type,
+        payment_reference: transaction.payment_reference,
+        type: 'D',
+        value: transaction.amount,
+        category_id: transaction.category_id,
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).catch((error) => {
+
+        console.log(error.response.data.message);
+        toast.error(error.response.data.message);
+
+    });
+
+
+    /*if (!response.ok) {
+        if (response.status === 422) {
+
+            throw new Error(data.message);
+        } else {
+            const message = `An error has occurred: ${response.status}`;
+            throw new Error(message);
+        }
+    }*/
+
+    const data = await response.json();
+    return data;
+};
+
 export const useTransactionsStore = defineStore('transactions', () => {
     const socket = inject("socket")
     const toast = useToast()
@@ -50,5 +86,6 @@ export const useTransactionsStore = defineStore('transactions', () => {
         serverBaseUrl,
         lastTransaction,
         loadTransactions,
-    }
+        sendMoney,
+    };
 })
