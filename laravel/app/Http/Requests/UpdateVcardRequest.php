@@ -24,7 +24,7 @@ class UpdateVcardRequest extends FormRequest
         return [
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email',
-            'photo_url' => 'sometimes|url',
+            'photo_url' => 'sometimes|string',
             'password' => 'sometimes|string|min:3',
             'confirmation_code' => 'sometimes|string|min:3',
             'blocked' => 'sometimes|boolean',
