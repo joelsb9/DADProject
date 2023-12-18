@@ -7,14 +7,11 @@ import RegisterVcard from "../components/auth/RegisterVcard.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Transactions from '../components/transactions/Transactions.vue'
 import Statistics from '../components/statistics/Statistics.vue'
-<<<<<<< HEAD
 import User from '../components/users/User.vue'
 import Users from '../components/users/Users.vue'
 import Admin from '../components/admins/Admin.vue'
-=======
 import Profile from '../components/profile/Profile.vue'
 import SendMoney from '../components/transactions/SendMoney.vue'
->>>>>>> 53e4926fcde10d63e008dac49628a4a77ef2d00f
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
 // import Admins from "../components/admins/Admins.vue";
@@ -104,7 +101,8 @@ const router = createRouter({
       path: '/admin/users',
       name: 'Users',
       component: Users,
-    }
+    },
+    {
       path: '/sendMoney',
       name: 'SendMoney',
       component: SendMoney
