@@ -60,7 +60,7 @@ class TransactionController extends Controller
         
             $vcard = Vcard::where('phone_number', $dataToSave['payment_reference'])->first();
             $transaction_new->old_balance = $vcard->balance;
-            $transaction_new->new_balance = $vcard->balance - ($dataToSave['type'] === 'C' ? -$dataToSave['value'] : $dataToSave['value']);
+            $transaction_new->new_balance = $vcard->balance - ($dataToSave['type'] === 'C' ? $dataToSave['value'] : -$dataToSave['value']);
         
             $transaction_new->payment_type = $dataToSave['payment_type'];
             $transaction_new->payment_reference = $dataToSave['vcard'];
@@ -79,8 +79,8 @@ class TransactionController extends Controller
         $transaction->type = $dataToSave['type'];
         $transaction->value = $dataToSave['value'];
         $transaction->payment_type = $dataToSave['payment_type'];
-        $transaction->description = $dataToSave['description'];
-        $transaction->category_id = $dataToSave['category_id'];
+        $transaction->description = $dataToSave['description'] ?? null;
+        $transaction->category_id = $dataToSave['category_id'] ?? null;
         $transaction->payment_reference = $dataToSave['payment_reference'];
 
         // Calculate old_balance and new_balance

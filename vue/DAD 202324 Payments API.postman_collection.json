@@ -1,0 +1,841 @@
+{
+	"info": {
+		"_postman_id": "697638c2-5c78-49dd-92ca-2df81ba83f03",
+		"name": "DAD 202324 Payments API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6984836",
+		"_collection_link": "https://galactic-flare-5042.postman.co/workspace/FIAF~17d229d7-0f73-4ce7-94d5-b122991bfcf8/collection/6984836-697638c2-5c78-49dd-92ca-2df81ba83f03?action=share&source=collection_link&creator=6984836"
+	},
+	"item": [
+		{
+			"name": "Valid",
+			"item": [
+				{
+					"name": "MBWAY credit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MBWAY\", \n    \"reference\": \"910000000\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MBWAY debit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MBWAY\", \n    \"reference\": \"910000000\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PAYPAL credit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"PAYPAL\", \n    \"reference\": \"john.doe@gmail.com\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PAYPAL debit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"PAYPAL\", \n    \"reference\": \"john.doe@gmail.com\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "IBAN credit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"IBAN\", \n    \"reference\": \"PT50123456781234567812349\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "IBAN debit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"IBAN\", \n    \"reference\": \"PT50123456781234567812349\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MB credit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MB\", \n    \"reference\": \"45634-123456789\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MB debit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MB\", \n    \"reference\": \"45634-123456789\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VISA credit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"VISA\", \n    \"reference\": \"4321567812345678\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VISA debit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"VISA\", \n    \"reference\": \"4321567812345678\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "INVALID",
+			"item": [
+				{
+					"name": "MBWAY Invalid Reference",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MBWAY\", \n    \"reference\": \"900000000\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MBWAY Invalid Value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MBWAY\", \n    \"reference\": \"910000000\", \n    \"value\": 63.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PAYPAL Invalid Reference",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"PAYPAL\", \n    \"reference\": \"xxjohn.doe@gmail.com\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PAYPAL Invalid Value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"PAYPAL\", \n    \"reference\": \"john.doe@gmail.com\", \n    \"value\": 123.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "IBAN Invalide Reference",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"IBAN\", \n    \"reference\": \"XX50123456781234567812349\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "IBAN Invalide Value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"IBAN\", \n    \"reference\": \"PT50123456781234567812349\", \n    \"value\": 1023.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MB Invalid Reference",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MB\", \n    \"reference\": \"95634-123456789\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MB Invalid Value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"MB\", \n    \"reference\": \"45634-123456789\", \n    \"value\": 623.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VISA Invalid Reference",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"VISA\", \n    \"reference\": \"4021567812345678\", \n    \"value\": 23.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VISA Invalid Value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"type\": \"VISA\", \n    \"reference\": \"4421567812345678\", \n    \"value\": 223.79 \n } ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dad-202324-payments-api.vercel.app/api/credit",
+							"protocol": "https",
+							"host": [
+								"dad-202324-payments-api",
+								"vercel",
+								"app"
+							],
+							"path": [
+								"api",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

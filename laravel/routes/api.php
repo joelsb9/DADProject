@@ -27,6 +27,8 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('admins/{admin}/password', [AdminController::class, 'update_password']);
         Route::apiResource('admins', AdminController::class)->except(['destroy']);
 
+        Route::post('transactions/sendmoney', [TransactionController::class, 'store']);
+
         Route::put('transactions/restore/{transactionId}', [TransactionController::class, 'restore']);
         Route::apiResource('transactions', TransactionController::class);
 
