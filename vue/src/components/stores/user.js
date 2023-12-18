@@ -13,14 +13,11 @@ export const useUserStore = defineStore('user', () => {
 
     const serverBaseUrl = inject('serverBaseUrl')
     //const projectsStore = useProjectsStore()
-
-    const user = ref(null)
-
     const userName = computed(() => user.value?.name ?? 'Anonymous')
 
-    const userId = ref(null)
-
-    const userType = ref('U')
+    const user = ref(JSON.parse(localStorage.getItem('user')) || null)
+    const userType = ref(localStorage.getItem('userType') || 'U')
+    const userId = ref(localStorage.getItem('userId') || null)
 
     const transactionsStore = useTransactionsStore()
 
@@ -32,6 +29,7 @@ export const useUserStore = defineStore('user', () => {
             : avatarNoneUrl)
 
     async function loadUser(user_type) {
+        console.log(user_type)
         try {
             if (user_type == 'V') {
                 const response = await axios.get('vcards/me')
@@ -48,6 +46,10 @@ export const useUserStore = defineStore('user', () => {
                 usersStore.loadAdmins()
                 usersStore.loadVcards()
             }
+
+            localStorage.setItem('user', JSON.stringify(user.value));
+            localStorage.setItem('userType', userType.value);
+            localStorage.setItem('userId', userId.value);
         } catch (error) {
             console.error('Error loading user or transactions:', error) // Log the error
             clearUser()
