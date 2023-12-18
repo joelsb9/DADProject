@@ -39,6 +39,9 @@ Route::middleware('auth:api')->group(function () {
         Route::post('categories/{categoryId}/restore', [CategoryController::class, 'restore']);
         Route::apiResource('categories', CategoryController::class);
 
+        Route::get('/statistics/transactionsPerMonth', [StatisticsController::class, 'transactionsPerMonth']);
+        Route::get('/statistics/transactionsPerType', [StatisticsController::class, 'transactionsPerType']);
+
     }
 );
 
