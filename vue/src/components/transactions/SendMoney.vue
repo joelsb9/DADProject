@@ -41,7 +41,7 @@ const errors = ref({
     value: '',
     category_id: ''
 });
-const validateForm = () => {
+const validateForm = async () => {
 
     if (!validatePaymentReference()) {
         return false;
@@ -63,6 +63,21 @@ const validateForm = () => {
             errors.value.category_id = 'Debit transactions can only use debit categories'
             return false;
         }
+    }
+    if(transaction.value.payment_type == 'VCARD'){
+        try{
+            const response = await axios.get(`vcards/`+transaction.value.payment_reference)
+            if(response.data.blocked == true){
+                toast.error('The vcard you are trying to send money to is blocked')
+                errors.value.payment_reference = 'The vcard you are trying to send money to is blocked'
+                return false;
+            }
+        }catch(error){
+            toast.error('The vcard you are trying to send money to does not exist')
+            errors.value.payment_reference = 'The vcard you are trying to send money to does not exist'
+            return false;
+        }
+        return true;
     }
     // Return true if the form is valid, false otherwise
     return !Object.values(errors.value).some((error) => error);
