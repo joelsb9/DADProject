@@ -7,6 +7,7 @@ import RegisterVcard from "../components/auth/RegisterVcard.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Transactions from '../components/transactions/Transactions.vue'
 import Statistics from '../components/statistics/Statistics.vue'
+import Categories from '../components/categories/Categories.vue'
 import User from '../components/users/User.vue'
 import Users from '../components/users/Users.vue'
 import Admin from '../components/admins/Admin.vue'
@@ -80,6 +81,11 @@ const router = createRouter({
       path: '/statistics',
       name: 'Statistics',
       component: Statistics
+    },
+    {
+      path: '/categories',
+      name: 'Categories',
+      component: Categories
     },
     {
       path: '/admin',
