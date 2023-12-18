@@ -22,7 +22,6 @@ class AuthController extends Controller
         ];
 
         request()->request->add($passportData);
-
         $request = Request::create(env('PASSPORT_SERVER_URL') . '/oauth/token', 'POST');
         $response = Route::dispatch($request);
         $errorCode = $response->getStatusCode();

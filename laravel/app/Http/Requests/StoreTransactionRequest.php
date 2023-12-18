@@ -131,7 +131,7 @@ class StoreTransactionRequest extends FormRequest
                     if ($type === 'C') {
                         $categoryType = Category::where('id', $value)->value('type');
 
-                        if ($categoryType !== 'credit') {
+                        if ($categoryType !== 'C') {
                             $fail('Credit transactions must use credit categories.');
                         }
                     }
@@ -140,7 +140,7 @@ class StoreTransactionRequest extends FormRequest
                     if ($type === 'D') {
                         $categoryType = Category::where('id', $value)->value('type');
 
-                        if ($categoryType !== 'debit') {
+                        if ($categoryType !== 'D') {
                             $fail('Debit transactions must use debit categories.');
                         }
                     }

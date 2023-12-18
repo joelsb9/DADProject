@@ -21,6 +21,14 @@ export const useTransactionsStore = defineStore('transactions', () => {
             }
             return true;
         } catch (error) {   
+            if (error.response && error.response.status === 422) {
+                console.error('Unauthorized request:', error.data.msg);
+                return -1;
+                // Handle unauthorized user (e.g., redirect to login page)
+                // Example: router.push('/login');
+            } else {
+                console.error('Error:', error.data.msg);
+            }
             console.error('Error loading transactions:', error) // Log the error
             return error
         }

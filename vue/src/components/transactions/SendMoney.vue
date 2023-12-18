@@ -55,11 +55,11 @@ const validateForm = () => {
     //if category.type == 'D' then the transaction.value.type = 'D'
     if (transaction.value.category_id != '') {
         let category = categories.value.find(element => element.id == transaction.value.category_id)
-        if (!(category.type == 'C' && transaction.value.type == 'D')) {
+        if ((category.type == 'D' && transaction.value.type == 'C')) {
             errors.value.category_id = 'Credit transactions can only use credit categories'
             return false;
         }
-        else if (!(category.type == 'C' && transaction.value.type == 'C')) {
+        else if ((category.type == 'C' && transaction.value.type == 'D')) {
             errors.value.category_id = 'Debit transactions can only use debit categories'
             return false;
         }
@@ -158,6 +158,7 @@ const submitTransaction = async () => {
     if (!validateForm()) {
         return;
     }
+    console.log(transaction.value)
     const response = await transactionsStore.sendMoney(transaction.value);
     if (response == true) {
         toast.success('Transaction completed');
@@ -215,7 +216,7 @@ const submitTransaction = async () => {
                 <div>
                     <label for="category_id">Category (Optional):</label>
                     <select id="category_id" v-model="transaction.category_id" :state="errors.category_id">
-                        <option disabled value="">No option</option>
+                        <option :value="0">No option</option>
                         <option v-for="category in categories" :key="category.id" :value="category.id">
                             {{ store.userType == 'V' ? 'ID: ' + category.id + ' - Name: ' + category.name : '' }}
                         </option>
