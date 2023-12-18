@@ -17,15 +17,14 @@ Route::middleware('auth:api')->group(function () {
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getTransactionsForVcard']);
         Route::get('vcards/me', [VcardController::class, 'show_me'])->middleware('auth:api');
         Route::put('vcards/restore/{vcardId}', [VcardController::class, 'restore']);
-        Route::put('vcards/{vcard}/password', [VcardController::class, 'update_password']);
-        Route::put('vcards/{vcard}', [VcardController::class, 'update']);
+        Route::patch('vcards/{vcard}/password', [VcardController::class, 'update_password']);
+        //Route::put('vcards/{vcard}', [VcardController::class, 'update']);
         Route::apiResource('vcards', VcardController::class);
-
 
         Route::post('logout',  [AuthController::class, 'logout']);
 
         Route::get('admins/me', [AdminController::class, 'show_me'])->middleware('auth:api');
-        Route::put('admins/{admin}/password', [AdminController::class, 'update_password']);
+        Route::patch('admins/{admin}/password', [AdminController::class, 'update_password']);
         Route::apiResource('admins', AdminController::class)->except(['destroy']);
 
         Route::post('transactions/sendmoney', [TransactionController::class, 'store']);
@@ -38,7 +37,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::post('categories/{categoryId}/restore', [CategoryController::class, 'restore']);
         Route::apiResource('categories', CategoryController::class);
-        
+
     }
 );
 

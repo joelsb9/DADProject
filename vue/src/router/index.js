@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '../components/stores/user.js'
-import HomeView from '../views/HomeView.vue'
 import Dashboard from "../components/Dashboard.vue"
 import Login from "../components/auth/Login.vue"
 import Homepage from "../components/Homepage.vue"
@@ -8,13 +7,19 @@ import RegisterVcard from "../components/auth/RegisterVcard.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Transactions from '../components/transactions/Transactions.vue'
 import Statistics from '../components/statistics/Statistics.vue'
+<<<<<<< HEAD
+import User from '../components/users/User.vue'
+import Users from '../components/users/Users.vue'
+import Admin from '../components/admins/Admin.vue'
+=======
 import Profile from '../components/profile/Profile.vue'
 import SendMoney from '../components/transactions/SendMoney.vue'
+>>>>>>> 53e4926fcde10d63e008dac49628a4a77ef2d00f
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
 // import Admins from "../components/admins/Admins.vue";
 // import Transactions from "../components/transactions/Transactions.vue";
-// import DefaultCategories from "../components/default-categories/DefaultCategories.vue";
+import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue";
 
 let handlingFirstRoute = true
 
@@ -24,7 +29,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: HomeView,
+      component: Homepage,
     },
     {
       path: '/about',
@@ -60,14 +65,15 @@ const router = createRouter({
       //component: Transactions,
     },*/
     {
-      path: '/profile',
-      name: 'Profile',
-      //component: Profile,
+      path: '/me',
+      name: 'Me',
+      component: User,
     },
     {
-      path: '/homepage',
-      name: 'Homepage',
-      component: Homepage
+      path: '/users/:id',
+      name: 'UsersId',
+      component: User,
+      props: route => ({ id: parseInt(route.params.id), restore: true })
     },
     {
       path: '/transactions',
@@ -80,11 +86,25 @@ const router = createRouter({
       component: Statistics
     },
     {
-      path: '/profile',
-      name: 'Profile',
-      component: Profile
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
     },
     {
+      path: '/admin/default-categories',
+      name: 'DefaultCategories',
+      component: DefaultCategories,
+    },
+    {
+      path: '/admin/send',
+      name: 'Send',
+      //component: Send,
+    },
+    {
+      path: '/admin/users',
+      name: 'Users',
+      component: Users,
+    }
       path: '/sendMoney',
       name: 'SendMoney',
       component: SendMoney

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { useUserStore } from '../stores/user.js';
 import axios from 'axios';
@@ -9,14 +9,12 @@ const userStore = useUserStore();
 
 userStore.restoreToken();
 
-const serverBaseUrl = inject('serverBaseUrl');
-
 const user = ref(userStore.user);
 const editMode = ref(false);
 const base64ImagePhoto = ref(null);
 
 const saveProfile = async () => {
-    const response = await axios.put(`vcards/` + userStore.userId, user.value).then((response) => {
+    await axios.put(`vcards/` + userStore.userId, user.value).then((response) => {
         user.value = response.data; // Update the userStore with the new user data
         editMode.value = false;
         toast.success('Profile edited successfully!');

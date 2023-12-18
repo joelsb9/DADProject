@@ -10,6 +10,7 @@ import Toast from "vue-toastification"
 import 'bootstrap'
 // Import the Toast CSS (or use your own)!
 import "vue-toastification/dist/index.css"
+import 'bootstrap-table/dist/bootstrap-table.min.css'
 // Import Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';

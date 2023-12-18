@@ -5,6 +5,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 //import { useProjectsStore } from "./projects.js"
 import { useToast } from "vue-toastification"
 import { useTransactionsStore } from './transactions.js'
+import { useUsersStore } from './users.js'
 
 export const useUserStore = defineStore('user', () => {
     const socket = inject("socket")
@@ -17,41 +18,49 @@ export const useUserStore = defineStore('user', () => {
 
     const userName = computed(() => user.value?.name ?? 'Anonymous')
 
-    const userId = computed(() => user.value?.phone_number ?? -1)
+    const userId = ref(null)
 
-    const userType = computed(() => user.value?.type ?? 'M')
+    const userType = ref('U')
 
     const transactionsStore = useTransactionsStore()
 
+    const usersStore = useUsersStore()
+
     const userPhotoUrl = computed(() =>
-        user.value?.photo_url
+        user.value?.photo_url && user.value.phone_number
             ? serverBaseUrl + '/storage/fotos/' + user.value.photo_url
             : avatarNoneUrl)
 
-
-    async function loadUser() {
+    async function loadUser(user_type) {
         try {
-            const response = await axios.get('vcards/me')
-            user.value = response.data
-
-            // Load transactions after the user data is loaded
-            if (user.value && user.value.phone_number) {
-                await transactionsStore.loadTransactions(user.value.phone_number)
+            if (user_type == 'V') {
+                const response = await axios.get('vcards/me')
+                user.value = response.data
+                userType.value = 'V'
+                userId.value = user.value.phone_number
+                transactionsStore.loadTransactions(userId.value)
+            }
+            else if (user_type == 'A') {
+                const response = await axios.get('admins/me')
+                user.value = response.data
+                userType.value = 'A'
+                userId.value = user.value.id
+                usersStore.loadAdmins()
+                usersStore.loadVcards()
             }
         } catch (error) {
             console.error('Error loading user or transactions:', error) // Log the error
-
             clearUser()
-
-            // Don't re-throw the error
         }
     }
 
     function clearUser() {
         delete axios.defaults.headers.common.Authorization
-        //projectsStore.clearProjects()
         sessionStorage.removeItem('token')
         user.value = null
+        userId.value = null
+        userType.value = 'U'
+        transactionsStore.clearTransactions();
     }
 
     async function login(credentials) {
@@ -59,7 +68,7 @@ export const useUserStore = defineStore('user', () => {
             const response = await axios.post('login', credentials)
             axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
             sessionStorage.setItem('token', response.data.access_token)
-            await loadUser()
+            await loadUser(response.data.user_type)
 
             //socket.emit('loggedIn', user.value)
 
@@ -77,9 +86,14 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    function isVcard(input) {
+        // Check if the input is a 9-digit number
+        return /^\d{9}$/.test(input.username);
+    }
+
     async function logout() {
         try {
-            let response = await axios.post('http://laravel.test/api/logout');
+            let response = await axios.post('logout');
 
             // Assuming a successful logout response has a specific status code (e.g., 200)
             if (response.status === 200) {
@@ -107,13 +121,19 @@ export const useUserStore = defineStore('user', () => {
 
 
     async function changePassword(credentials) {
-        if (userId.value < 0) {
+        if (userId.value == -1) {
             throw 'Anonymous users cannot change the password!'
         }
         try {
-            await axios.patch(`users/${user.value.id}/password`, credentials)
+            if (userType.value == 'V') {
+                await axios.patch(`vcards/${userId.value}/password`, credentials)
+            }
+            else if (userType.value == 'A') {
+                await axios.patch(`admins/${userId.value}/password`, credentials)
+            }
             return true
         } catch (error) {
+            console.log("Error changing password:", error);
             throw error
         }
     }

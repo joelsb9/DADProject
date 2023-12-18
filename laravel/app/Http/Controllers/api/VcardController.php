@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\User;
 use App\Models\Vcard;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -148,7 +149,7 @@ class VcardController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
         // Retrieve the Vcard based on the authenticated user's phone_number
-        $vcard = Vcard::where('phone_number', $user->username)->first();
+        $vcard = Vcard::where('phone_number', $user->id)->first();
 
         // Check if the Vcard is found and authorized
         if (!$vcard) {

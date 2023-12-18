@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 class AuthController extends Controller
@@ -28,7 +30,22 @@ class AuthController extends Controller
         if (
             $errorCode == '200'
         ) {
-            return json_decode((string) $response->content(), true);
+            // Authentication successful, retrieve user data
+            $responseData = json_decode((string) $response->content(), true);
+            // Retrieve user type based on user data (modify this part based on your logic)
+            $user = User::where('username', $passportData['username'])->first(); // Assuming you have access to the authenticated user
+            if($user->blocked==1){
+                return response()->json(
+                    ['msg' => 'User blocked, talk to an administrator to unblock it'],
+                    $errorCode
+                );
+            }
+            $userType = $user->user_type; // Adjust this based on your actual user model property
+
+            // Add user type to the response
+            $responseData['user_type'] = $userType;
+            //dd($responseData);
+            return $responseData;
         } else {
             return response()->json(
                 ['msg' => 'User credentials are invalid'],

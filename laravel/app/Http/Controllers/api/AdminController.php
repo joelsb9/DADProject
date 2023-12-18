@@ -14,7 +14,8 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return AdminResource::collection(Admin::all());
+        $admins = Admin::paginate(10);
+        return AdminResource::collection($admins);
     }
 
     public function show(Admin $admin)
@@ -56,12 +57,21 @@ class AdminController extends Controller
 
     public function show_me(Request $request)
     {
-        $admin = $request->user();
+        $user = $request->user();
+        // Check if the user is authenticated
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        //dd($user);
+        // Retrieve the Vcard based on the authenticated user's phone_number
+        $admin = Admin::where('id', $user->id)->first();
 
-        if ($admin) {
-            return new AdminResource($admin);
-        } else {
+        // Check if the Vcard is found and authorized
+        if (!$admin) {
             return response()->json(['message' => 'Admin not found'], 404);
         }
+
+        // Return Vcard information using a resource class (assuming you have a VcardResource class)
+        return new AdminResource($admin);
     }
 }
