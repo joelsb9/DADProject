@@ -7,13 +7,14 @@ import RegisterVcard from "../components/auth/RegisterVcard.vue"
 import ChangePassword from "../components/auth/ChangePassword.vue"
 import Transactions from '../components/transactions/Transactions.vue'
 import Statistics from '../components/statistics/Statistics.vue'
-import Profile from '../components/profile/Profile.vue'
-import Admin from '../components/admin/Admin.vue'
+import User from '../components/users/User.vue'
+import Users from '../components/users/Users.vue'
+import Admin from '../components/admins/Admin.vue'
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
 // import Admins from "../components/admins/Admins.vue";
 // import Transactions from "../components/transactions/Transactions.vue";
-// import DefaultCategories from "../components/default-categories/DefaultCategories.vue";
+import DefaultCategories from "../components/defaultCategories/DefaultCategories.vue";
 
 let handlingFirstRoute = true
 
@@ -59,9 +60,15 @@ const router = createRouter({
       //component: Transactions,
     },*/
     {
-      path: '/profile',
-      name: 'Profile',
-      //component: Profile,
+      path: '/me',
+      name: 'Me',
+      component: User,
+    },
+    {
+      path: '/users/:id',
+      name: 'UsersId',
+      component: User,
+      props: route => ({ id: parseInt(route.params.id), restore: true })
     },
     {
       path: '/transactions',
@@ -74,10 +81,25 @@ const router = createRouter({
       component: Statistics
     },
     {
-      path: '/profile',
-      name: 'Profile',
-      component: Profile
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
     },
+    {
+      path: '/admin/default-categories',
+      name: 'DefaultCategories',
+      component: DefaultCategories,
+    },
+    {
+      path: '/admin/send',
+      name: 'Send',
+      //component: Send,
+    },
+    {
+      path: '/admin/users',
+      name: 'Users',
+      component: Users,
+    }
   ]
 });
 // {

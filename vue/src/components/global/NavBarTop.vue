@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import {  computed } from 'vue';
 import { useRouter, RouterLink } from 'vue-router'
 import { useUserStore } from '../stores/user';
 import { useToast } from 'vue-toastification';
@@ -7,6 +7,7 @@ import { useToast } from 'vue-toastification';
 const toast = useToast();
 const router = useRouter();
 const userStore = useUserStore();
+const userType = computed(() => userStore.userType ?? 'U');
 
 async function leaveAccount() {
     // Implement your logic for leaving the account here
@@ -39,8 +40,11 @@ async function goToStatistics() {
     router.push({ name: 'Statistics' })
 }
 async function goToProfile() {
-    router.push({ name: 'Profile' })
+    router.push({ name: 'Me' })
 }
+// async function goToAdmin() {
+//     router.push({ name: 'Admin' })
+// }
 
 </script>
   
@@ -52,7 +56,7 @@ async function goToProfile() {
             <li class="nav-item" role="presentation" @click="goToHomePage">
                 <router-link to="/" :class="['nav-link', 'rounded-5', $route.path === '/homepage' ? 'active' : '']"
                     id="home-tab2" data-bs-toggle="tab" type="button" role="tab"
-                    :aria-selected="$route.name === 'Home' ? 'true' : 'false'" @click.prevent>
+                    :aria-selected="$route.name === 'Home' ? 'true' : 'false'">
                     <i class="bi bi-house"></i> Home
                 </router-link>
             </li>
@@ -65,10 +69,10 @@ async function goToProfile() {
                 </router-link>
             </li>
             <li class="nav-item" role="presentation" @click="goToProfile">
-                <router-link :to="{ name: 'Profile' }"
+                <router-link :to="{ name: 'Me' }"
                     :class="['nav-link', 'rounded-5', $route.name === 'Profile' ? 'active' : '']" id="contact-tab2"
                     data-bs-toggle="tab" type="button" role="tab"
-                    :aria-selected="$route.name === 'Profile' ? 'true' : 'false'" @click.prevent>
+                    :aria-selected="$route.name === 'Me' ? 'true' : 'false'">
                     <i class="bi bi-person"></i> Profile
                 </router-link>
             </li>
@@ -76,13 +80,21 @@ async function goToProfile() {
                 <router-link :to="{ name: 'Statistics' }"
                     :class="['nav-link', 'rounded-5', $route.name === 'Statistics' ? 'active' : '']" id="contact-tab2"
                     data-bs-toggle="tab" type="button" role="tab"
-                    :aria-selected="$route.name === 'Statistics' ? 'true' : 'false'" @click.prevent>
+                    :aria-selected="$route.name === 'Statistics' ? 'true' : 'false'" >
                     <i class="bi bi-bar-chart-line-fill"></i> Statistics
                 </router-link>
             </li>
+            <!-- <li v-if="userType === 'A'"  class="nav-item" role="presentation" @click="goToAdmin">
+                <router-link :to="{ name: 'Admin' }"
+                    :class="['nav-link', 'rounded-5', $route.name === 'Admin' ? 'active' : '']" id="contact-tab2"
+                    data-bs-toggle="tab" type="button" role="tab"
+                    :aria-selected="$route.name === 'Admin' ? 'true' : 'false'">
+                    <i class="bi bi-person-fill-gear"></i> Admin
+                </router-link>
+            </li> -->
             <li class="nav-item" role="presentation" @click="leaveAccount">
                 <a href="#" class="nav-link rounded-5" id="contact-tab2" data-bs-toggle="tab" type="button" role="tab"
-                    aria-selected="false" @click.prevent><i class="bi bi-door-closed"></i> Leave</a>
+                    aria-selected="false"><i class="bi bi-door-closed"></i> Leave</a>
             </li>
         </ul>
     </div>

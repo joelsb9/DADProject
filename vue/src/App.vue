@@ -3,8 +3,9 @@ import { useRouter, RouterLink, RouterView } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useUserStore } from './components/stores/user.js'
 import NavBarTop from './components/global/NavBarTop.vue'
+import NavBarTopAdmin from './components/admins/NavBarTopAdmin.vue'
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 
 // import avatarNoneUrl from '@/assets/avatar-none.png';
@@ -12,28 +13,10 @@ import { ref, onMounted } from 'vue'
 const toast = useToast()
 const router = useRouter()
 
-// const logout = async () => {
-//   if (await adminStore.logout()) {
-//     toast.success('User has logged out of the application.')
-//     clickMenuOption()
-//     router.push({ name: 'home' })
-//   } else {
-//     toast.error('There was a problem logging out of the application!')
-//   }
-// }
-
-// const clickMenuOption = () => {
-//   const domReference = document.getElementById('buttonSidebarExpandId')
-//   if (domReference) {
-//     if (window.getComputedStyle(domReference).display !== "none") {
-//       domReference.click()
-//     }
-//   }
-// }
-
 const userStore = useUserStore()
 // Simulate authentication check on component mount
 const isLoggedIn = ref(false)
+const userType = computed(() => userStore.userType ?? 'U')
 
 // On component mount, check if the user is already logged in
 onMounted(async () => {
@@ -46,7 +29,8 @@ onMounted(async () => {
 
 <template>
   <div id="app">
-    <NavBarTop />
+    <NavBarTop/>
+    <NavBarTopAdmin v-if="userType === 'A'" />
     <router-view />
   </div>
 </template>

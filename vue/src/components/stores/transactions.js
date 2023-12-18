@@ -24,6 +24,10 @@ export const useTransactionsStore = defineStore('transactions', () => {
         //console.log(response.data);
     };
 
+    function clearTransactions(){
+        transactions.value = null
+    }
+
     socket.on('insertedTransaction', (insertedTransaction) => {
         transactions.value.push(insertedTransaction)
         toast.success(`Transaction #${insertedTransaction.id} has been added successfully!`)
@@ -39,6 +43,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
     return {
         transactions,
+        clearTransactions,
         loadTransactions,
     }
 })

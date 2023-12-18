@@ -34,6 +34,12 @@ class AuthController extends Controller
             $responseData = json_decode((string) $response->content(), true);
             // Retrieve user type based on user data (modify this part based on your logic)
             $user = User::where('username', $passportData['username'])->first(); // Assuming you have access to the authenticated user
+            if($user->blocked==1){
+                return response()->json(
+                    ['msg' => 'User blocked, talk to an administrator to unblock it'],
+                    $errorCode
+                );
+            }
             $userType = $user->user_type; // Adjust this based on your actual user model property
 
             // Add user type to the response

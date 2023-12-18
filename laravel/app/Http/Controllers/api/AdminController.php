@@ -14,7 +14,8 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return AdminResource::collection(Admin::all());
+        $admins = Admin::paginate(10);
+        return AdminResource::collection($admins);
     }
 
     public function show(Admin $admin)

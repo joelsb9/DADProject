@@ -5,6 +5,7 @@ import avatarNoneUrl from '@/assets/avatar-none.png'
 //import { useProjectsStore } from "./projects.js"
 import { useToast } from "vue-toastification"
 import { useTransactionsStore } from './transactions.js'
+import { useUsersStore } from './users.js'
 
 export const useUserStore = defineStore('user', () => {
     const socket = inject("socket")
@@ -17,15 +18,13 @@ export const useUserStore = defineStore('user', () => {
 
     const userName = computed(() => user.value?.name ?? 'Anonymous')
 
-<<<<<<< HEAD
-    const userId = ref(-1)
-=======
-    const userId = computed(() => user.value?.phone_number ?? -1)
->>>>>>> a6606916ad598f270493a30d7e9fa32f7f497417
+    const userId = ref(null)
 
-    const userType = ref(-1)
+    const userType = ref('U')
 
     const transactionsStore = useTransactionsStore()
+
+    const usersStore = useUsersStore()
 
     const userPhotoUrl = computed(() =>
         user.value?.photo_url && user.value.phone_number
@@ -37,7 +36,6 @@ export const useUserStore = defineStore('user', () => {
             if (user_type == 'V') {
                 const response = await axios.get('vcards/me')
                 user.value = response.data
-                console.log(user.value)
                 userType.value = 'V'
                 userId.value = user.value.phone_number
                 transactionsStore.loadTransactions(userId.value)
@@ -45,9 +43,10 @@ export const useUserStore = defineStore('user', () => {
             else if (user_type == 'A') {
                 const response = await axios.get('admins/me')
                 user.value = response.data
-                console.log(user.value)
                 userType.value = 'A'
                 userId.value = user.value.id
+                usersStore.loadAdmins()
+                usersStore.loadVcards()
             }
         } catch (error) {
             console.error('Error loading user or transactions:', error) // Log the error
@@ -59,6 +58,9 @@ export const useUserStore = defineStore('user', () => {
         delete axios.defaults.headers.common.Authorization
         sessionStorage.removeItem('token')
         user.value = null
+        userId.value = null
+        userType.value = 'U'
+        transactionsStore.clearTransactions();
     }
 
     async function login(credentials) {
