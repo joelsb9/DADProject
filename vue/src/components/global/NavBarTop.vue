@@ -39,6 +39,9 @@ async function goToHomePage() {
 async function goToStatistics() {
     router.push({ name: 'Statistics' })
 }
+async function goToCategories() {
+    router.push({ name: 'Categories' })
+}
 async function goToProfile() {
     router.push({ name: 'Me' })
 }
@@ -82,6 +85,14 @@ async function goToProfile() {
                     data-bs-toggle="tab" type="button" role="tab"
                     :aria-selected="$route.name === 'Statistics' ? 'true' : 'false'" >
                     <i class="bi bi-bar-chart-line-fill"></i> Statistics
+                </router-link>
+            </li>
+            <li class="nav-item" role="presentation" @click="goToCategories">
+                <router-link :to="{ name: 'Categories' }"
+                    :class="['nav-link', 'rounded-5', $route.name === 'Categories' ? 'active' : '']" id="contact-tab2"
+                    data-bs-toggle="tab" type="button" role="tab"
+                    :aria-selected="$route.name === 'Categories' ? 'true' : 'false'" >
+                    <i class="bi bi-bar-chart-line-fill"></i> Categories
                 </router-link>
             </li>
             <!-- <li v-if="userType === 'A'"  class="nav-item" role="presentation" @click="goToAdmin">
