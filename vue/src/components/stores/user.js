@@ -65,24 +65,35 @@ export const useUserStore = defineStore('user', () => {
 
     async function login(credentials) {
         try {
-            const response = await axios.post('login', credentials)
-            axios.defaults.headers.common.Authorization = "Bearer " + response.data.access_token
-            sessionStorage.setItem('token', response.data.access_token)
-            await loadUser(response.data.user_type)
+            const response = await axios.post('login', credentials);
+            axios.defaults.headers.common.Authorization = 'Bearer ' + response.data.access_token;
+            sessionStorage.setItem('token', response.data.access_token);
+            if(response.data.msg){
+                return response.data.msg
+            }
+            await loadUser(response.data.user_type);
 
-            //socket.emit('loggedIn', user.value)
-
-            socket.on(user.value.phone_number, () => {
-                console.log('You have a new transaction!')
-            })
-
-            await loadUser()
-
-            return true
-        }
-        catch (error) {
-            clearUser()
-            return false
+            if (user.value) {
+                // Ensure user.value is defined before accessing properties
+                // socket.emit('loggedIn', user.value);
+                socket.on(user.value.phone_number, () => {
+                    console.log('You have a new transaction!');
+                });
+            }
+            await loadUser();
+            return true;
+        } catch (error) {
+            clearUser();
+            console.error(error);
+            if (error.response && error.response.data && error.response.data.msg) {
+                const errorMessage = error.response.data.msg;
+                console.error(errorMessage);
+                return errorMessage;
+            } else {
+                // Handle other types of errors
+                console.error('An unexpected error occurred.');
+                return 'An unexpected error occurred.';
+            }
         }
     }
 

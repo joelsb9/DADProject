@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Vcard;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
@@ -56,5 +57,12 @@ class CategoryController extends Controller
         Category::withTrashed()->find($categoryId)->restore();
 
         return response()->json(['message' => 'Category restored successfully']);
+    }
+    public function getCategoriesForVcard(Vcard $vcard)
+    {
+        // Retrieve all transactions associated with the given vCard
+        $categories = Category::where('vcard', $vcard->phone_number)->get();
+
+        return CategoryResource::collection($categories);
     }
 }

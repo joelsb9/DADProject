@@ -38,7 +38,7 @@ export const sendMoney = async (transaction) => {
         }
     }*/
 
-    const data = await response.json();
+    const data = await response.data;
     return data;
 };
 
@@ -57,14 +57,18 @@ export const useTransactionsStore = defineStore('transactions', () => {
             }
         });
         transactions.value = response.data;
-        //console.log(response.data);
     };
 
-    function clearTransactions(){
+    function clearTransactions() {
         transactions.value = null
     }
     const lastTransaction = computed(() => {
-        return transactions.value[transactions.value.length - 1];
+        if (transactions.value && transactions.value.length > 0) {
+            return transactions.value[transactions.value.length - 1];
+        } else {
+            // Handle the case where transactions.value is null or empty
+            return null; // Or you can return a default value or handle it differently
+        }
     });
 
     socket.on('insertedTransaction', (insertedTransaction) => {

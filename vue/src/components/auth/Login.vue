@@ -17,15 +17,14 @@ const credentials = ref({
 //const emit = defineEmits(['login','registerVcard'])
 
 const login = async () => {
-    if (await userStore.login(credentials.value)) {
-
+    const response = await userStore.login(credentials.value)
+    if (response === true) {
         toast.success('Vcard ' + userStore.userName + ' logged in');
-
         router.push('/');
     } else {
         // Clear the password field in case of invalid credentials
         credentials.value.password = '';
-        toast.error('User credentials are invalid!');
+        toast.error(response ?? 'Failed to login');
     }
 }
 // const goToRegister = () => {

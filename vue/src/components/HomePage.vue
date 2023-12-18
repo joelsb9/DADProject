@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";
 import { useUserStore } from './stores/user.js';
@@ -21,13 +21,18 @@ const selectedUser = ref('');
 const amount = ref(0);
 
 const sendMoney = ref(transactionsStore.sendMoney);
-const lastTransaction = ref(transactionsStore.lastTransaction);
 
-console.log("user: ", user.value.phone_number);
 
 const goToSendMoney = () => {
     router.push({ name: 'SendMoney' });
 };
+
+onMounted (async () => {
+    await transactionsStore.loadTransactions(user.value.phone_number);
+});
+const lastTransaction = computed(()=>(
+    transactionsStore.lastTransaction)
+);
 
 </script>
 

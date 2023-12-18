@@ -15,6 +15,7 @@ Route::post('register', [VcardController::class, 'store']);
 
 Route::middleware('auth:api')->group(function () {
         Route::get('vcards/{vcard}/transactions', [TransactionController::class, 'getTransactionsForVcard']);
+        Route::get('vcards/{vcard}/categories', [CategoryController::class, 'getCategoriesForVcard']);
         Route::get('vcards/me', [VcardController::class, 'show_me'])->middleware('auth:api');
         Route::put('vcards/restore/{vcardId}', [VcardController::class, 'restore']);
         Route::patch('vcards/{vcard}/password', [VcardController::class, 'update_password']);
@@ -27,9 +28,9 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('admins/{admin}/password', [AdminController::class, 'update_password']);
         Route::apiResource('admins', AdminController::class)->except(['destroy']);
 
-        Route::post('transactions/sendmoney', [TransactionController::class, 'store']);
-
+        //Route::post('transactions/sendmoney', [TransactionController::class, 'store']);
         Route::put('transactions/restore/{transactionId}', [TransactionController::class, 'restore']);
+        Route::get('transactions/payment-types', [TransactionController::class, 'getPaymentTypes']);
         Route::apiResource('transactions', TransactionController::class);
 
         Route::post('default-categories/{defaultCategoryId}/restore', [DefaultCategoryController::class, 'restore']);

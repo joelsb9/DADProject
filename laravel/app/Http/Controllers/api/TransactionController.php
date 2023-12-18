@@ -43,7 +43,7 @@ class TransactionController extends Controller
         }
 
         $transaction = new Transaction();
-        $transaction->fill($dataToSave);
+        //$transaction->fill($dataToSave);
 
         $transaction_new = new Transaction();
         //Se for uma transação de vCard cria uma nova transação no cartao destino
@@ -53,15 +53,15 @@ class TransactionController extends Controller
             $transaction_new->datetime = Carbon::now();
             $transaction->date = Carbon::now()->toDateString();
             $transaction->datetime = Carbon::now();
-        
+
             $transaction_new->vcard = $dataToSave['payment_reference'];
             $transaction_new->type = 'C';
             $transaction_new->value = $dataToSave['value'];
-        
+
             $vcard = Vcard::where('phone_number', $dataToSave['payment_reference'])->first();
             $transaction_new->old_balance = $vcard->balance;
             $transaction_new->new_balance = $vcard->balance - ($dataToSave['type'] === 'C' ? $dataToSave['value'] : -$dataToSave['value']);
-        
+
             $transaction_new->payment_type = $dataToSave['payment_type'];
             $transaction_new->payment_reference = $dataToSave['vcard'];
             $transaction_new->pair_vcard = $dataToSave['vcard'];
@@ -69,27 +69,26 @@ class TransactionController extends Controller
             if (isset($dataToSave['category_id'])) {
                 $transaction_new->category_id = $dataToSave['category_id'];
             }
-        
+
             $transaction_new->save();
             $transaction->pair_transaction = $transaction_new->id;
             $transaction->pair_vcard = $dataToSave['payment_reference'];
-        
 
-        $transaction->vcard = $dataToSave['vcard'];
-        $transaction->type = $dataToSave['type'];
-        $transaction->value = $dataToSave['value'];
-        $transaction->payment_type = $dataToSave['payment_type'];
-        $transaction->description = $dataToSave['description'] ?? null;
-        $transaction->category_id = $dataToSave['category_id'] ?? null;
-        $transaction->payment_reference = $dataToSave['payment_reference'];
+            $transaction->vcard = $dataToSave['vcard'];
+            $transaction->type = $dataToSave['type'];
+            $transaction->value = $dataToSave['value'];
+            $transaction->payment_type = $dataToSave['payment_type'];
+            $transaction->description = $dataToSave['description'] ?? null;
+            $transaction->category_id = $dataToSave['category_id'] ?? null;
+            $transaction->payment_reference = $dataToSave['payment_reference'];
 
-        // Calculate old_balance and new_balance
-        $vcard = Vcard::where('phone_number', $dataToSave['vcard'])->first();
-        $transaction->old_balance = $vcard->balance;
-        $transaction->new_balance = $vcard->balance - ($dataToSave['type'] === 'C' ? -$dataToSave['value'] : $dataToSave['value']);
+            // Calculate old_balance and new_balance
+            $vcard = Vcard::where('phone_number', $dataToSave['vcard'])->first();
+            $transaction->old_balance = $vcard->balance;
+            $transaction->new_balance = $vcard->balance - ($dataToSave['type'] === 'C' ? -$dataToSave['value'] : $dataToSave['value']);
 
-        $transaction->save();
-        return new TransactionResource($transaction);
+            $transaction->save();
+            return new TransactionResource($transaction);
         } else {
             $transaction->date = Carbon::now()->toDateString();
             $transaction->datetime = Carbon::now();
@@ -125,7 +124,14 @@ class TransactionController extends Controller
     {
         // Retrieve all transactions associated with the given vCard
         $transactions = $vcard->transactions()->get();
-        
+
         return TransactionResource::collection($transactions);
+    }
+    public function getPaymentTypes()
+    {
+        // Retrieve all transactions associated with the given vCard
+        $payment_types = Transaction::select('payment_type')->distinct()->get();
+
+        return $payment_types;
     }
 }
