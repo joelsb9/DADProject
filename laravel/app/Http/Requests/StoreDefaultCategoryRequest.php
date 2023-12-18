@@ -26,6 +26,6 @@ class StoreDefaultCategoryRequest extends FormRequest
             'name' => 'required|string|max:255',
             'custom_options' => 'nullable|json',
             'custom_data' => 'nullable|json',
-        ];s
+        ];
     }
 }

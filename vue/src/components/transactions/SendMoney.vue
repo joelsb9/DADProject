@@ -1,3 +1,53 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useUserStore } from '../stores/user.js';
+import { sendMoney } from '../stores/transactions.js'; // Add this line
+import axios from 'axios';
+
+
+const store = useUserStore();
+const user = ref(store.user);
+
+const transaction = ref({
+    value: 0,
+    vcard: user.value.phone_number,
+    type: 'D',
+    payment_reference: '',
+    payment_type: 'VCARD',
+    category_id: '',
+    description: '',
+    pair_vcard: ''
+})
+
+const payment_types = ref([]);
+const categories = ref([]);
+
+const submitTransaction = async () => {
+
+    console.log(amount.value)
+    const transaction = {
+        vcard: vcard.value,
+        payment_type: payment_type.value,
+        payment_reference: payment_reference.value,
+        amount: amount.value,
+        category: category.value
+    };
+    await sendMoney(transaction);
+};
+onMounted(async () => {
+    let response = await axios.get('transactions/payment-types')
+    const help = response.data
+    //for each element in the array, add the value payment_type to the payment_types array
+    help.forEach(element => {
+        payment_types.value.push(element.payment_type)
+    });
+    response = await axios.get(`vcards/${store.userId}/categories`)
+    categories.value = response.data
+    console.log(categories)
+});
+
+</script>
+
 <template>
     <div class="send-money home">
         <div class="main-content">
@@ -5,23 +55,25 @@
             <form @submit.prevent="submitTransaction" class="section">
                 <div>
                     <label for="payment_type">Payment Type:</label>
-                    <select id="payment_type" v-model="payment_type" required>
+                    <select id="payment_type" v-model="transaction.payment_type" required>
                         <option disabled value="">Please select one</option>
-                        <option>VCARD</option>
-                        <!-- Add other payment types here -->
+                        <option v-for="type in payment_types" :key="type" :value="type">{{ type }}</option>
                     </select>
                 </div>
                 <div>
                     <label for="vcard">Reference:</label>
-                    <input id="vcard" v-model="payment_reference" type="text" required>
+                    <input id="vcard" v-model="transaction.payment_reference" type="text" required>
                 </div>
                 <div>
                     <label for="amount">Amount:</label>
-                    <input id="amount" v-model="amount" type="number" min="0" required>
+                    <input id="amount" v-model="transaction.value" type="number" min="0" required>
                 </div>
                 <div>
-                    <label for="payment_reference">Category (Optional):</label>
-                    <input id="payment_reference" v-model="category" type="text" Optional>
+                    <label for="category_id">Category (Optional):</label>
+                    <select id="category_id" v-model="transaction.category_id">
+                        <option disabled value="">Please select one</option>
+                        <option v-for="category in categories" :key="category.id" :value="type">{{ category }}</option>
+                    </select>
                 </div>
                 <button>Send Money</button>
             </form>
@@ -48,34 +100,7 @@ v-model="category"
 -->
 </template>
   
-<script setup>
-import { ref, computed } from 'vue';
-import { useUserStore } from '../stores/user.js';
-import { sendMoney } from '../stores/transactions.js'; // Add this line
 
-
-const store = useUserStore();
-const user = ref(store.user);
-
-const amount = ref(0);
-const vcard = computed(() => user.value.phone_number);
-const payment_type = ref('');
-const payment_reference = ref('');
-const category = ref('');
-
-
-const submitTransaction = async () => {
-    console.log(amount.value)
-    const transaction = {
-        vcard: vcard.value,
-        payment_type: payment_type.value,
-        payment_reference: payment_reference.value,
-        amount: amount.value,
-        category: category.value
-    };
-    await sendMoney(transaction);
-};
-</script>
   
 <style scoped>
 .home {
