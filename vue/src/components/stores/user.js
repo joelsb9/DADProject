@@ -68,7 +68,7 @@ export const useUserStore = defineStore('user', () => {
             const response = await axios.post('login', credentials);
             axios.defaults.headers.common.Authorization = 'Bearer ' + response.data.access_token;
             sessionStorage.setItem('token', response.data.access_token);
-            if(response.data.msg){
+            if (response.data.msg) {
                 return response.data.msg
             }
             await loadUser(response.data.user_type);

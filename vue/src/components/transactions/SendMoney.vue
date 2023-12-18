@@ -4,6 +4,7 @@ import { useUserStore } from '../stores/user.js';
 import { useTransactionsStore } from '../stores/transactions.js'; // Add this line
 import { useToast } from "vue-toastification";
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 const toast = useToast();
 const transactionsStore = useTransactionsStore();
@@ -18,6 +19,7 @@ const props = defineProps({
 
 const store = useUserStore();
 const user = ref(store.user);
+const router = useRouter();
 
 const transaction = ref({
     value: 0,
@@ -40,7 +42,7 @@ const errors = ref({
     category_id: ''
 });
 const validateForm = () => {
-    
+
     if (!validatePaymentReference()) {
         return false;
     }
@@ -80,15 +82,15 @@ onMounted(async () => {
     // Add event listener for form validation
     const forms = document.querySelector('.needs-validation');
     Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.validateForm()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-        form.classList.add('was-validated')
-      }, false)
-    })
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.validateForm()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
 });
 
 
@@ -159,6 +161,7 @@ const submitTransaction = async () => {
     const response = await transactionsStore.sendMoney(transaction.value);
     if (response == true) {
         toast.success('Transaction completed');
+        router.push({ name: 'Home' });
     }
     else {
         toast.error(response.value ?? 'Failed to send money');
@@ -178,54 +181,55 @@ const submitTransaction = async () => {
 </script>
 
 <template>
-     <div class="send-money home">
-    <div class="main-content">
-      <h1 class="greeting">Send Money</h1>
-      <form @submit.prevent="submitTransaction" class="row g-3 needs-validation section" novalidate>
-        <div v-if="props.admin">
-          <label for="type">Type:</label>
-          <select id="type" v-model="transaction.type" required>
-            <option disabled value="">Please select one</option>
-            <option :key="D" :value="D">Debit</option>
-            <option :key="C" :value="C">Credit</option>
-          </select>
+    <div class="send-money home">
+        <div class="main-content">
+            <h1 class="greeting">Send Money</h1>
+            <form @submit.prevent="submitTransaction" class="row g-3 needs-validation section" novalidate>
+                <div v-if="props.admin">
+                    <label for="type">Type:</label>
+                    <select id="type" v-model="transaction.type" required>
+                        <option disabled value="">Please select one</option>
+                        <option :key="D" :value="D">Debit</option>
+                        <option :key="C" :value="C">Credit</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="payment_type">Payment Type:</label>
+                    <select id="payment_type" :state="errors.payment_type" v-model="transaction.payment_type" required>
+                        <option disabled value="">Please select one</option>
+                        <option v-for="type in payment_types" :key="type" :value="type">{{ type }}</option>
+                    </select>
+                    <p class=".alert-warning" v-show="errors.payment_type">{{ errors.payment_type }}</p>
+                </div>
+                <div>
+                    <label for="vcard">Reference:</label>
+                    <input id="vcard" :state="errors.payment_reference" v-model="transaction.payment_reference" type="text"
+                        required>
+                    <p class=".alert-warning" v-show="errors.payment_reference">{{ errors.payment_reference }}</p>
+                </div>
+                <div>
+                    <label for="amount">Amount:</label>
+                    <input id="amount" v-model="transaction.value" type="number" min="0" required :state="errors.value">
+                    <p class=".alert-warning" v-show="errors.value">{{ errors.value }}</p>
+                </div>
+                <div>
+                    <label for="category_id">Category (Optional):</label>
+                    <select id="category_id" v-model="transaction.category_id" :state="errors.category_id">
+                        <option disabled value="">No option</option>
+                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                            {{ store.userType == 'V' ? 'ID: ' + category.id + ' - Name: ' + category.name : '' }}
+                        </option>
+                    </select>
+                    <p class=".alert-warning" v-show="errors.category_id">{{ errors.category_id }}</p>
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <input id="description" v-model="transaction.description" type="text">
+                </div>
+                <button class="btn btn-primary" type="submit">Send Money</button>
+            </form>
         </div>
-        <div>
-          <label for="payment_type">Payment Type:</label>
-          <select id="payment_type" :state="errors.payment_type" v-model="transaction.payment_type" required>
-            <option disabled value="">Please select one</option>
-            <option v-for="type in payment_types" :key="type" :value="type">{{ type }}</option>
-          </select>
-          <p class=".alert-warning" v-show="errors.payment_type">{{ errors.payment_type }}</p>
-        </div>
-        <div>
-          <label for="vcard">Reference:</label>
-          <input id="vcard" :state="errors.payment_reference" v-model="transaction.payment_reference" type="text" required>
-          <p class=".alert-warning" v-show="errors.payment_reference">{{ errors.payment_reference }}</p>
-        </div>
-        <div>
-          <label for="amount">Amount:</label>
-          <input id="amount" v-model="transaction.value" type="number" min="0" required :state="errors.value">
-          <p class=".alert-warning" v-show="errors.value">{{ errors.value }}</p>
-        </div>
-        <div>
-          <label for="category_id">Category (Optional):</label>
-          <select id="category_id" v-model="transaction.category_id" :state="errors.category_id">
-            <option disabled value="">No option</option>
-            <option v-for="category in categories" :key="category.id" :value="category.id">
-              {{ store.userType == 'V' ? 'ID: ' + category.id + ' - Name: ' + category.name : '' }}
-            </option>
-          </select>
-          <p class=".alert-warning" v-show="errors.category_id">{{ errors.category_id }}</p>
-        </div>
-        <div>
-          <label for="description">Description:</label>
-          <input id="description" v-model="transaction.description" type="text">
-        </div>
-        <button class="btn btn-primary" type="submit">Send Money</button>
-      </form>
     </div>
-  </div>
 </template>
   
 
