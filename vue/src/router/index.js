@@ -10,7 +10,6 @@ import Statistics from '../components/statistics/Statistics.vue'
 import User from '../components/users/User.vue'
 import Users from '../components/users/Users.vue'
 import Admin from '../components/admins/Admin.vue'
-import Profile from '../components/profile/Profile.vue'
 import SendMoney from '../components/transactions/SendMoney.vue'
 // import Categories from "../components/categories/Categories.vue";
 // import Vcards from "../components/vcards/Vcards.vue";
