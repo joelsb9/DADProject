@@ -1,9 +1,20 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch, defineProps } from 'vue';
 import { useUserStore } from '../stores/user.js';
-import { sendMoney } from '../stores/transactions.js'; // Add this line
+import { useTransactionsStore } from '../stores/transactions.js'; // Add this line
+import { useToast } from "vue-toastification";
 import axios from 'axios';
 
+const toast = useToast();
+const transactionsStore = useTransactionsStore();
+
+const props = defineProps({
+    admin: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
+});
 
 const store = useUserStore();
 const user = ref(store.user);
@@ -22,19 +33,41 @@ const transaction = ref({
 const payment_types = ref([]);
 const categories = ref([]);
 
-const submitTransaction = async () => {
-
-    console.log(amount.value)
-    const transaction = {
-        vcard: vcard.value,
-        payment_type: payment_type.value,
-        payment_reference: payment_reference.value,
-        amount: amount.value,
-        category: category.value
-    };
-    await sendMoney(transaction);
+const errors = ref({
+    payment_type: '',
+    payment_reference: '',
+    value: '',
+    category_id: ''
+});
+const validateForm = () => {
+    
+    if (!validatePaymentReference()) {
+        return false;
+    }
+    if (transaction.value.value > user.value.balance) {
+        toast.error('You dont have enough money')
+        errors.value.value = 'You dont have enough money'
+        return false;
+    }
+    //if category.type == 'C' then the transaction.value.type = 'C'
+    //if category.type == 'D' then the transaction.value.type = 'D'
+    if (transaction.value.category_id != '') {
+        let category = categories.value.find(element => element.id == transaction.value.category_id)
+        if (!(category.type == 'C' && transaction.value.type == 'D')) {
+            errors.value.category_id = 'Credit transactions can only use credit categories'
+            return false;
+        }
+        else if (!(category.type == 'C' && transaction.value.type == 'C')) {
+            errors.value.category_id = 'Debit transactions can only use debit categories'
+            return false;
+        }
+    }
+    // Return true if the form is valid, false otherwise
+    return !Object.values(errors.value).some((error) => error);
 };
+
 onMounted(async () => {
+    'use strict';
     let response = await axios.get('transactions/payment-types')
     const help = response.data
     //for each element in the array, add the value payment_type to the payment_types array
@@ -42,62 +75,157 @@ onMounted(async () => {
         payment_types.value.push(element.payment_type)
     });
     response = await axios.get(`vcards/${store.userId}/categories`)
-    categories.value = response.data
-    console.log(categories)
+    categories.value = response.data.filter(element => element.type == 'D')
+
+    // Add event listener for form validation
+    const forms = document.querySelector('.needs-validation');
+    Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.validateForm()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
 });
+
+
+const validatePaymentReference = () => {
+
+    switch (transaction.value.payment_type) {
+        case 'VCARD':
+            if (!/^9\d{8}$/.test(transaction.value.payment_reference)) {
+                errors.value.payment_reference = 'Reference must be a valid phone number and start with 9.';
+                return false;
+            }
+            break;
+
+        case 'MBWAY':
+            if (!/^9\d{8}$/.test(transaction.value.payment_reference)) {
+                errors.value.payment_reference = 'Reference must be a valid phone number and start with 9.';
+                return false;
+            }
+            break;
+
+        case 'PAYPAL':
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(transaction.value.payment_reference)) {
+                errors.value.payment_reference = 'Reference must be a valid email address.';
+                return false;
+            }
+            break;
+
+        case 'IBAN':
+            if (!/^[A-Z]{2}\d{23}$/.test(transaction.value.payment_reference)) {
+                errors.value.payment_reference = 'Reference must be a valid IBAN.';
+                return false;
+            }
+            break;
+
+        case 'MB':
+            if (!/^\d{5}-\d{9}$/.test(transaction.value.payment_reference)) {
+                errors.value.payment_reference = 'Reference must be a valid MB reference.';
+                return false;
+            }
+            break;
+
+        case 'VISA':
+            if (!/^4\d{15}$/.test(transaction.value.payment_reference)) {
+                errors.value.payment_reference = 'Reference must be a valid VISA card number.';
+                return false;
+            }
+            break;
+
+        default:
+            errors.value.payment_reference = '';
+            break;
+    }
+
+    errors.value.payment_reference = ''; // Reset the error message if validation passes
+    return true;
+};
+
+const submitTransaction = async () => {
+    if (transaction.value.payment_type == 'VCARD') {
+        transaction.value.pair_vcard = transaction.value.payment_reference;
+    }
+    else {
+        transaction.value.pair_vcard = '';
+    }
+    if (!validateForm()) {
+        return;
+    }
+    const response = await transactionsStore.sendMoney(transaction.value);
+    if (response == true) {
+        toast.success('Transaction completed');
+    }
+    else {
+        toast.error(response.value ?? 'Failed to send money');
+    }
+    // console.log(amount.value)
+    // const transaction = {
+    //     vcard: vcard.value,
+    //     payment_type: payment_type.value,
+    //     payment_reference: payment_reference.value,
+    //     amount: amount.value,
+    //     category: category.value
+    // };
+};
+
+
 
 </script>
 
 <template>
-    <div class="send-money home">
-        <div class="main-content">
-            <h1 class="greeting">Send Money</h1>
-            <form @submit.prevent="submitTransaction" class="section">
-                <div>
-                    <label for="payment_type">Payment Type:</label>
-                    <select id="payment_type" v-model="transaction.payment_type" required>
-                        <option disabled value="">Please select one</option>
-                        <option v-for="type in payment_types" :key="type" :value="type">{{ type }}</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="vcard">Reference:</label>
-                    <input id="vcard" v-model="transaction.payment_reference" type="text" required>
-                </div>
-                <div>
-                    <label for="amount">Amount:</label>
-                    <input id="amount" v-model="transaction.value" type="number" min="0" required>
-                </div>
-                <div>
-                    <label for="category_id">Category (Optional):</label>
-                    <select id="category_id" v-model="transaction.category_id">
-                        <option disabled value="">Please select one</option>
-                        <option v-for="category in categories" :key="category.id" :value="type">{{ category }}</option>
-                    </select>
-                </div>
-                <button>Send Money</button>
-            </form>
+     <div class="send-money home">
+    <div class="main-content">
+      <h1 class="greeting">Send Money</h1>
+      <form @submit.prevent="submitTransaction" class="row g-3 needs-validation section" novalidate>
+        <div v-if="props.admin">
+          <label for="type">Type:</label>
+          <select id="type" v-model="transaction.type" required>
+            <option disabled value="">Please select one</option>
+            <option :key="D" :value="D">Debit</option>
+            <option :key="C" :value="C">Credit</option>
+          </select>
         </div>
+        <div>
+          <label for="payment_type">Payment Type:</label>
+          <select id="payment_type" :state="errors.payment_type" v-model="transaction.payment_type" required>
+            <option disabled value="">Please select one</option>
+            <option v-for="type in payment_types" :key="type" :value="type">{{ type }}</option>
+          </select>
+          <p class=".alert-warning" v-show="errors.payment_type">{{ errors.payment_type }}</p>
+        </div>
+        <div>
+          <label for="vcard">Reference:</label>
+          <input id="vcard" :state="errors.payment_reference" v-model="transaction.payment_reference" type="text" required>
+          <p class=".alert-warning" v-show="errors.payment_reference">{{ errors.payment_reference }}</p>
+        </div>
+        <div>
+          <label for="amount">Amount:</label>
+          <input id="amount" v-model="transaction.value" type="number" min="0" required :state="errors.value">
+          <p class=".alert-warning" v-show="errors.value">{{ errors.value }}</p>
+        </div>
+        <div>
+          <label for="category_id">Category (Optional):</label>
+          <select id="category_id" v-model="transaction.category_id" :state="errors.category_id">
+            <option disabled value="">No option</option>
+            <option v-for="category in categories" :key="category.id" :value="category.id">
+              {{ store.userType == 'V' ? 'ID: ' + category.id + ' - Name: ' + category.name : '' }}
+            </option>
+          </select>
+          <p class=".alert-warning" v-show="errors.category_id">{{ errors.category_id }}</p>
+        </div>
+        <div>
+          <label for="description">Description:</label>
+          <input id="description" v-model="transaction.description" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Send Money</button>
+      </form>
     </div>
-    <!--
-vcard: The username of the authenticated user who owns the vCard. This is checked at the beginning of the code snippet you provided.
-fetch the number from the logged in user
-
-payment_type: This determines if the transaction is a vCard transaction. If it is (payment_type equals 'VCARD'), a new transaction is created for the destination card.
-v-model="payment_type"
-
-payment_reference: If the payment_type is 'VCARD', this is used to find the destination vCard and create a new transaction for it. It's also used to set the pair_vcard for both the new and original transactions.
-v-model="payment_reference"
-
-type: This is used to set the type of the transaction. It also affects the calculation of the new_balance for the new transaction if the payment_type is 'VCARD'.
-Always Debit, witch is a 'D' in the Db
-
-value: This is used to set the value of the transaction. It also affects the calculation of the new_balance for the new transaction if the payment_type is 'VCARD'.
-v-model.number="amount"
-
-category_id (optional): If this is set in the data, it's used to set the category_id for the new transaction. 
-v-model="category"
--->
+  </div>
 </template>
   
 
@@ -129,6 +257,8 @@ v-model="category"
 
 .section {
     margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
     padding: 20px;
     border-radius: 5px;
     background-color: #e9e8e8;

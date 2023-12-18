@@ -24,7 +24,7 @@ const sendMoney = ref(transactionsStore.sendMoney);
 
 
 const goToSendMoney = () => {
-    router.push({ name: 'SendMoney' });
+    router.push({ name: 'SendMoney' , props: { admin: true } });
 };
 
 onMounted (async () => {

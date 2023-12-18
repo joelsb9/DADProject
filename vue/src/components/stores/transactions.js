@@ -5,43 +5,6 @@ import { useToast } from "vue-toastification"
 import { useUserStore } from './user.js'
 
 
-
-export const sendMoney = async (transaction) => {
-    const toast = useToast()
-    console.log(transaction)
-    const response = await axios.post(`/transactions`, {
-        vcard: transaction.vcard,
-        payment_type: transaction.payment_type,
-        payment_reference: transaction.payment_reference,
-        type: 'D',
-        value: transaction.amount,
-        category_id: transaction.category_id,
-    }, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    }).catch((error) => {
-
-        console.log(error.response.data.message);
-        toast.error(error.response.data.message);
-
-    });
-
-
-    /*if (!response.ok) {
-        if (response.status === 422) {
-
-            throw new Error(data.message);
-        } else {
-            const message = `An error has occurred: ${response.status}`;
-            throw new Error(message);
-        }
-    }*/
-
-    const data = await response.data;
-    return data;
-};
-
 export const useTransactionsStore = defineStore('transactions', () => {
     const socket = inject("socket")
     const toast = useToast()
@@ -49,14 +12,29 @@ export const useTransactionsStore = defineStore('transactions', () => {
     //const userStore = useUserStore() // Use the user store
     const transactions = ref([])
 
-    const loadTransactions = async (vcardId) => {
-        //console.log(`vcards/${vcard}/transactions`)
-        const response = await axios.get(`vcards/${vcardId}/transactions`, {
-            params: {
-                columns: 'id,vcard,date,datetime,type,value,old_balance,new_balance,payment_type,payment_reference,pair_transaction,pair_vcard,category_id,description'
+    async function sendMoney(transaction) {
+        try {
+            const response = await axios.post(`/transactions`, transaction);
+            transactions.value.push(response.data);
+            if(response.data.msg){
+                return response.data.msg
             }
-        });
-        transactions.value = response.data;
+            return true;
+        } catch (error) {   
+            console.error('Error loading transactions:', error) // Log the error
+            return error
+        }
+    };
+
+    async function loadTransactions (vcardId) {
+        //console.log(`vcards/${vcard}/transactions`)
+        try {
+            const response = await axios.get(`vcards/${vcardId}/transactions`);
+            transactions.value = response.data;
+        } catch (error) {
+            console.error('Error loading transactions:', error) // Log the error
+            clearTransactions()
+        }
     };
 
     function clearTransactions() {
